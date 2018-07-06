@@ -237,12 +237,12 @@
   :mode ("\\.hbs\\'" "\\.htm\\'" "\\.html\\'")
   :hook (web-mode . indent-guide-mode)
   :init
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
-  (setq web-mode-script-padding 2)
-  (setq web-mode-style-padding 2)
-  (setq web-mode-engines-alist '(("ctemplate"    . "\\.hbs\\'"))))
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-script-padding 2
+        web-mode-style-padding 2
+        web-mode-engines-alist '(("ctemplate"    . "\\.hbs\\'"))))
 
 ;; Requires eslint (npm i -g eslint)
 (use-package tide
@@ -276,10 +276,9 @@
   (setq go-playground-basedir "~/Projects/go/src/playground"))
 
 (use-package dired-subtree
-  :config
-  (bind-keys :map dired-mode-map
-             ("i" . dired-subtree-insert)
-             (";" . dired-subtree-remove)))
+  :bind (:map dired-mode-map
+              ("i" . dired-subtree-insert)
+              (";" . dired-subtree-remove)))
 
 (use-package dired-sidebar
   :bind ("<f8>" . dired-sidebar-toggle-sidebar))
@@ -430,9 +429,8 @@
   :delight
   :hook (text-mode . flyspell-mode)
   :init
-  (setq ispell-program-name "aspell")
-  ;; Please note ispell-extra-args contains ACTUAL parameters passed to aspell
-  (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
+  (setq ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
 
 
 ;;; Load private config
