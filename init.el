@@ -115,19 +115,19 @@
     (setq cursor-type (if (or god-local-mode buffer-read-only)
                           'hbar
                         'box)))
-
   (add-hook 'god-mode-enabled-hook 'my-update-cursor)
   (add-hook 'god-mode-disabled-hook 'my-update-cursor))
 
 (use-package elfeed
-  :bind ("C-x w" . elfeed)
+  :bind (("C-x w" . elfeed)
+  :map elfeed-search-mode-map
+  ("l" . elfeed-toggle-star))
   :init
   (setq elfeed-db-directory "~/Sync/elfeed/elfeeddb")
   (setq-default elfeed-search-filter "@2-week-ago +unread -star")
   :config
   (defalias 'elfeed-toggle-star
-	(elfeed-expose #'elfeed-search-toggle-all 'star))
-  (define-key elfeed-search-mode-map (kbd "l") 'elfeed-toggle-star))
+    (elfeed-expose #'elfeed-search-toggle-all 'star)))
 
 (use-package elfeed-org
   :init
