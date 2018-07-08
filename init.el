@@ -135,17 +135,17 @@
   (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
 
 (use-package autorevert
+  :delight auto-revert-mode
   :init
-  (global-auto-revert-mode t)
-  :delight auto-revert-mode)
+  (global-auto-revert-mode t))
 
 (use-package undo-tree
-  :init
-  (global-undo-tree-mode)
   :delight
   :bind
   ("<f9>" . 'undo)
-  ("<f10>" . 'redo))
+  ("<f10>" . 'redo)
+  :init
+  (global-undo-tree-mode))
 
 (use-package git-gutter
   :init
