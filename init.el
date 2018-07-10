@@ -105,8 +105,6 @@
 (global-set-key (kbd "C-w") 'xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'xah-copy-line-or-region)
 
-(global-set-key (kbd "C-r") nil) ; Unset C-r since I don't use I-search
-
 ;;; MELPA packages
 (use-package god-mode
   :bind ("<escape>" . god-mode-all)
