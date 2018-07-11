@@ -183,6 +183,7 @@
   ("C-c u p" . org-password-manager-get-password)
   ("C-c u g" . org-password-manager-generate-password))
   :init
+  (setq org-capture-bookmark nil)
   (setq org-completion-use-ido t)
   (setq org-log-done t)
   (setq org-log-into-drawer t)
