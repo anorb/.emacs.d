@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Promise.all setup
+# key: promiseall
+# --
+let [] = await Promise.all([
+
+]);
