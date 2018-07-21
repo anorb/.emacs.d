@@ -213,15 +213,17 @@
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::")))
 
-(use-package js2-mode
+(use-package rjsx-mode
   :mode "\\.js\\'"
   :init
   ;; Turn off js2 mode errors & warnings
   (setq js2-mode-show-parse-errors nil)
   (setq js2-mode-show-strict-warnings nil)
   :config
-  (setq js-indent-level 2)
+  (setq js2-basic-offset 2))
 
+(use-package tide
+  :config
   (defun setup-tide-mode ()
     (interactive)
     (tide-setup)
@@ -230,7 +232,7 @@
     (tide-hl-identifier-mode +1)
     (company-mode +1))
   (setq company-tooltip-align-annotations t)   ; aligns annotation to the right hand side
-  (add-hook 'js2-mode-hook #'setup-tide-mode))
+  (add-hook 'rjsx-mode-hook #'setup-tide-mode))
 
 (use-package web-mode
   :mode ("\\.hbs\\'" "\\.htm\\'" "\\.html\\'")
