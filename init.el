@@ -38,6 +38,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p) ; Make yes/no prompts shorter
 (show-paren-mode 1)               ; Highlight parenthesis & other characters
 (global-hl-line-mode 1)           ; Highlight current line
+(global-prettify-symbols-mode t)
 
 ;; Typing with region selected will delete region
 (delete-selection-mode)
@@ -105,6 +106,19 @@
 (global-set-key (kbd "C-w") 'xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'xah-copy-line-or-region)
 
+(global-set-key (kbd "H-e") 'eshell)
+
+;; Built in packages
+(use-package autorevert
+  :delight auto-revert-mode
+  :init
+  (global-auto-revert-mode t))
+
+(use-package subword
+  :delight
+  :init
+  (global-subword-mode 1))
+
 ;;; MELPA packages
 (use-package god-mode
   :bind ("<escape>" . god-mode-all)
@@ -131,11 +145,6 @@
   :init
   (elfeed-org)
   (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
-
-(use-package autorevert
-  :delight auto-revert-mode
-  :init
-  (global-auto-revert-mode t))
 
 (use-package undo-tree
   :delight
@@ -213,14 +222,16 @@
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::")))
 
-(use-package rjsx-mode
-  :mode "\\.js\\'"
-  :init
-  ;; Turn off js2 mode errors & warnings
-  (setq js2-mode-show-parse-errors nil)
-  (setq js2-mode-show-strict-warnings nil)
+(use-package js2-mode
   :config
-  (setq js2-basic-offset 2))
+  ;; Turn off js2 mode errors & warnings
+  (setq js2-mode-show-parse-errors nil
+        js2-mode-show-strict-warnings nil
+        js2-basic-offset 2)
+  (js2-imenu-extras-mode))
+
+(use-package rjsx-mode
+  :mode "\\.js\\'")
 
 (use-package tide
   :config
@@ -345,6 +356,8 @@
 (use-package smartparens
   :delight smartparens-mode
   :hook (prog-mode . smartparens-mode)
+  :init
+  (setq sp-highlight-pair-overlay nil)
   :config
   (require 'smartparens-config)
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
@@ -358,6 +371,13 @@
         ivy-count-format "%d/%d "
         ivy-display-style 'fancy
         ivy-initial-inputs-alist nil))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1)
+  (setq ivy-virtual-abbreviate 'full
+        ivy-rich-switch-buffer-align-virtual-buffer t
+        ivy-rich-path-style 'abbrev))
 
 (use-package counsel
   :bind
@@ -433,6 +453,9 @@
   (setq ispell-program-name "aspell"
         ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
 
+(use-package imenu-list
+  :init
+  (setq imenu-list-auto-resize t))
 
 ;;; Load private config
 (load "~/.emacs.d/lisp/private.el")
