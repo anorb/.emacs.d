@@ -16,6 +16,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(setq user-full-name "Austin Norberg"
+      user-mail-address "austin@norberg.tech")
+
 ;; Code formatting
 (setq tab-width 4)
 (setq c-default-style "k&r")
@@ -38,7 +41,6 @@
 (defalias 'yes-or-no-p 'y-or-n-p) ; Make yes/no prompts shorter
 (show-paren-mode 1)               ; Highlight parenthesis & other characters
 (global-hl-line-mode 1)           ; Highlight current line
-(global-prettify-symbols-mode t)
 
 ;; Typing with region selected will delete region
 (delete-selection-mode)
@@ -193,7 +195,6 @@
   ("C-c u g" . org-password-manager-generate-password))
   :init
   (setq org-capture-bookmark nil)
-  (setq org-completion-use-ido t)
   (setq org-log-done t)
   (setq org-log-into-drawer t)
   (setq org-todo-keywords '((type "TODO" "|" "DONE")))
@@ -407,10 +408,16 @@
   (load-theme 'spacemacs-light t))
 
 (use-package irony
-  :hook (c-mode . irony-mode))
+  :hook (c-mode . irony-mode)
+  :init
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
 (use-package flycheck
-  :hook (prog-mode . flycheck-mode))
+  :hook (prog-mode . flycheck-mode)
+  :init
+  (defun disable-elisp-flycheck ()
+    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+  (add-hook 'org-src-mode-hook 'disable-elisp-flycheck))
 
 (use-package flycheck-irony
   :hook (flycheck-mode . flycheck-irony-setup))
