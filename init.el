@@ -97,7 +97,7 @@
 		 ("programming" (or
                                  (mode . sh-mode)
                                  (mode . lisp-mode)
-                                 (mode . elisp-mode)
+                                 (mode . emacs-lisp-mode)
                                  (mode . go-mode)
                                  (mode . js2-mode)))
 		 ("emacs" (or
