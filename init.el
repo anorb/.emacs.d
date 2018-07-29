@@ -1,3 +1,14 @@
+;;; init.el --- My Emacs config                      -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2018  Austin Norberg
+
+;; Author: Austin Norberg <austin@norberg.tech>
+
+;;; Commentary:
+
+;;
+
+;;; Code:
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives
@@ -21,8 +32,8 @@
 
 ;; Code formatting
 (setq tab-width 4)
-(setq c-default-style "k&r")
-(setq c-basic-offset 2)
+(defvar c-default-style "k&r")
+(defvar c-basic-offset 2)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq-default indent-tabs-mode nil)
 
@@ -31,7 +42,7 @@
 (setq epg-gpg-home-directory "~/.gnupg")
 
 ;; Tramp stuff
-(setq tramp-default-method "ssh")
+(defvar tramp-default-method "ssh")
 
 ;; UI stuff
 (menu-bar-mode -1)
@@ -55,7 +66,7 @@
 (add-hook 'kill-emacs-hook #'kill-dired-buffers)
 
 ;; ensure all package with use-package
-(setq use-package-always-ensure t)
+(defvar use-package-always-ensure t)
 
 ;; Backups and autosaves to tmp
 ;; (setq backup-directory-alist
@@ -70,13 +81,13 @@
       kept-old-versions 5)   ; and how many of the old
 
 ;; Ibuffer changes
-(setq ibuffer-show-empty-filter-groups nil)
+(defvar ibuffer-show-empty-filter-groups nil)
 (add-hook 'ibuffer-mode-hook
 	  (lambda ()
 	    (ibuffer-auto-mode 1)
 	    (ibuffer-switch-to-saved-filter-groups "default")))
 
-(setq ibuffer-saved-filter-groups
+(defvar ibuffer-saved-filter-groups
 	'(("default"
 		 ("dired" (mode . dired-mode))
 		 ("org" (name . "^.*org$"))
@@ -194,7 +205,7 @@
   ("C-c u p" . org-password-manager-get-password)
   ("C-c u g" . org-password-manager-generate-password))
   :init
-  (setq org-capture-bookmark nil)
+  (defvar org-capture-bookmark nil)
   (setq org-log-done t)
   (setq org-log-into-drawer t)
   (setq org-todo-keywords '((type "TODO" "|" "DONE")))
@@ -205,7 +216,7 @@
   (load-library "find-lisp")
   (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
 
-  (setq org-capture-templates
+  (defvar org-capture-templates
         `(("t" "tech task" entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")
            "* TODO %?\n")
           ("n" "non-tech task" entry (file+headline ,(concat org-directory "personal.org") "Non-tech tasks")
@@ -243,7 +254,7 @@
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
     (company-mode +1))
-  (setq company-tooltip-align-annotations t)   ; aligns annotation to the right hand side
+  (defvar company-tooltip-align-annotations t)   ; aligns annotation to the right hand side
   (add-hook 'rjsx-mode-hook #'setup-tide-mode))
 
 (use-package web-mode
@@ -301,7 +312,7 @@
   :delight
   :hook (prog-mode . company-mode)
   :init
-  (setq company-dabbrev-downcase nil))
+  (defvar company-dabbrev-downcase nil))
 
 (use-package company-go
   :config
