@@ -121,7 +121,7 @@
 
 (global-set-key (kbd "H-e") 'eshell)
 
-;; Built in packages
+;;; Built in packages
 (use-package autorevert
   :delight auto-revert-mode
   :init
@@ -474,6 +474,16 @@
 (use-package imenu-list
   :init
   (setq imenu-list-auto-resize t))
+
+;;; Local packages
+;; These are packages not available on MELPA and/or have been modified
+(use-package bookmark+
+  :ensure nil
+  :load-path "lisp/bookmark+")
+;;
+(use-package web-server
+  :ensure nil
+  :load-path "lisp/web-server")
 
 ;;; Load private config
 (load "~/.emacs.d/lisp/private.el")

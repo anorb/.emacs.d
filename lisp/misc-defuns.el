@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t; -*-
+
 (defun kill-dired-buffers ()
   "Kill all opened dired buffers."
   (interactive)
@@ -75,3 +77,42 @@ Version 2015-06-10"
     (progn (if (use-region-p)
                (kill-region (region-beginning) (region-end) t)
              (kill-region (line-beginning-position) (line-beginning-position 2))))))
+
+
+
+;; Modified version of...
+;; http://jacek.zlydach.pl/blog/2018-05-29-serving-directories-over-http-with-emacs.html
+(defvar my/file-server nil "Is the file server running? Holds an instance if so.")
+
+(defun my/serve-directory (directory port)
+  "Serve DIRECTORY over http via PORT."
+  (interactive "DDirectory: \nnPort: ")
+  (if my/file-server
+      (message "File server is already running.")
+    (progn
+      (setq my/file-server
+            (let ((docroot directory))
+              (ws-start
+               (lambda (request)
+                 (with-slots (process headers) request
+                   (let* ((path (substring (cdr (assoc :GET headers)) 1))
+                          (expanded (ws-in-directory-p docroot path)))
+                     (if (and expanded
+                              (file-exists-p expanded))
+                         (if (file-directory-p expanded)
+                             (ws-send-directory-list process expanded)
+                           (ws-send-file process (expand-file-name path docroot)))
+                       (ws-send-404 process)))))
+               port
+               nil)))
+      (message "Serving directory %s on port %d" directory port))))
+
+(defun my/stop-server ()
+  "Stop the file server if running."
+  (interactive)
+  (if my/file-server
+      (progn
+        (ws-stop my/file-server)
+        (setf my/file-server nil)
+        (message "Stopped the file server."))
+    (message "No file server is running.")))
