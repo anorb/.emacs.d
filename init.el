@@ -110,6 +110,7 @@
 
 ;;; Custom keybinds
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key [f5] 'revert-buffer)
 
 (global-set-key (kbd "M-v") 'scroll-up-half)
 (global-set-key (kbd "C-v") 'scroll-down-half)
@@ -118,6 +119,10 @@
 
 (global-set-key (kbd "C-w") 'xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'xah-copy-line-or-region)
+
+(global-set-key (kbd "C-0") 'delete-window-balance)
+(global-set-key (kbd "C-2") 'split-window-below-focus)
+(global-set-key (kbd "C-3") 'split-window-right-focus)
 
 (global-set-key (kbd "H-e") 'eshell)
 
@@ -215,6 +220,8 @@
   (setq org-directory "~/Sync/org/")
   (load-library "find-lisp")
   (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
+
+  (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
 
   (defvar org-capture-templates
         `(("t" "tech task" entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")
