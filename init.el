@@ -120,9 +120,9 @@
 (global-set-key (kbd "C-w") 'xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'xah-copy-line-or-region)
 
-(global-set-key (kbd "C-0") 'delete-window-balance)
-(global-set-key (kbd "C-2") 'split-window-below-focus)
-(global-set-key (kbd "C-3") 'split-window-right-focus)
+(global-set-key (kbd "C-x 0") 'delete-window-balance)
+(global-set-key (kbd "C-x 2") 'split-window-below-focus)
+(global-set-key (kbd "C-x 3") 'split-window-right-focus)
 
 (global-set-key (kbd "H-e") 'eshell)
 
