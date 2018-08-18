@@ -141,3 +141,17 @@ Version 2015-06-10"
   "Indent the whole buffer."
   (interactive)
   (indent-region (point-min) (point-max)))
+
+(defun generate-new-password (length symbols)
+  "Generate a password with pwgen with LENGTH characters.
+
+If SYMBOLS is t, symbols will be added to the password."
+  (interactive
+   (list (read-number "Length: ")
+         (y-or-n-p "Add symbols? ")))
+
+  (let* ((pwgen-command (if symbols
+                            (concat "pwgen -s -1 -y " (number-to-string length))
+                          (concat "pwgen -s -1 " (number-to-string length))))
+         (generated-password (s-trim (shell-command-to-string pwgen-command))))
+    (funcall interprogram-cut-function generated-password)))
