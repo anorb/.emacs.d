@@ -395,9 +395,7 @@
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1)
-  (setq ivy-virtual-abbreviate 'full
-        ivy-rich-switch-buffer-align-virtual-buffer t
-        ivy-rich-path-style 'abbrev))
+  (setq ivy-rich-path-style 'abbrev))
 
 (use-package counsel
   :bind
