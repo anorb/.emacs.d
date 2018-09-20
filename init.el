@@ -99,7 +99,8 @@
                                  (mode . lisp-mode)
                                  (mode . emacs-lisp-mode)
                                  (mode . go-mode)
-                                 (mode . js2-mode)))
+                                 (mode . js2-mode)
+                                 (mode . rjsx-mode)))
 		 ("emacs" (or
 			   (name . "^\\*scratch\\*$")
 			   (name . "^\\*Messages\\*$")
@@ -387,8 +388,7 @@
   :init
   (ivy-mode 1)
   :config
-  (setq ivy-use-virtual-buffers t
-        ivy-count-format "%d/%d "
+  (setq ivy-count-format "%d/%d "
         ivy-display-style 'fancy
         ivy-initial-inputs-alist nil))
 
@@ -492,6 +492,8 @@
 (use-package web-server
   :ensure nil
   :load-path "lisp/web-server")
+
+(use-package lua-mode)
 
 ;;; Load private config
 (load "~/.emacs.d/lisp/private.el")
