@@ -104,7 +104,8 @@ Version 2015-06-10"
                            (ws-send-file process (expand-file-name path docroot)))
                        (ws-send-404 process)))))
                port
-               nil)))
+               nil
+               :host "0.0.0.0")))
       (message "Serving directory %s on port %d" directory port))))
 
 (defun my/stop-server ()
