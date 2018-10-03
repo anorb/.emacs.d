@@ -182,12 +182,12 @@
   :init
   (projectile-mode)                     ; Enable projectile mode in all buffers
   (setq projectile-completion-system 'ivy)
-  (setq projectile-mode-line
-        '(:eval
+  (setq projectile-mode-line-fn
+        (lambda ()
           (cond
-            ((file-remote-p default-directory) " Projectile[*remote*]")
-            ((projectile-project-p) (format " [%s]" (projectile-project-name)))
-            (t "")))))
+           ((file-remote-p default-directory) " Projectile[*remote*]")
+           ((projectile-project-p) (format " [%s]" (projectile-project-name)))
+           (t "")))))
 
 (use-package eyebrowse
   :init
