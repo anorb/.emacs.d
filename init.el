@@ -206,11 +206,7 @@
 (use-package org-mode
   :bind
   (("C-c c" . org-capture)
-  ("C-c a" . org-agenda)
-  :map org-mode-map
-  ("C-c u u" . org-password-manager-get-username)
-  ("C-c u p" . org-password-manager-get-password)
-  ("C-c u g" . org-password-manager-generate-password))
+  ("C-c a" . org-agenda))
   :init
   (defvar org-capture-bookmark nil)
   (setq org-log-done t)
@@ -315,7 +311,6 @@
 
 (use-package dired-sidebar
   :bind ("<f8>" . dired-sidebar-toggle-sidebar))
-
 
 (use-package company
   :delight
@@ -492,6 +487,8 @@
   :load-path "lisp/web-server")
 
 (use-package lua-mode)
+
+(use-package ivy-pass)
 
 ;;; Load private config
 (load "~/.emacs.d/lisp/private.el")
