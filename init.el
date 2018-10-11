@@ -152,13 +152,10 @@
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
-  ("l" . elfeed-toggle-star))
+  ("o" . elfeed-visit-maybe-externally))
   :init
   (setq elfeed-db-directory "~/Sync/elfeed/elfeeddb")
-  (setq-default elfeed-search-filter "@2-week-ago +unread -star")
-  :config
-  (defalias 'elfeed-toggle-star
-    (elfeed-expose #'elfeed-search-toggle-all 'star)))
+  (setq-default elfeed-search-filter "@2-week-ago +unread"))
 
 (use-package elfeed-org
   :init

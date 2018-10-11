@@ -156,3 +156,40 @@ If SYMBOLS is t, symbols will be added to the password."
          (generated-password (s-trim (shell-command-to-string pwgen-command))))
     (insert generated-password)
     (funcall interprogram-cut-function generated-password)))
+
+;; elfeed functions courtesy of https://github.com/skeeto/elfeed/issues/267
+(defun elfeed-play-with-mpv ()
+  "Play entry link with mpv."
+  (interactive)
+  (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single)))
+        (quality-arg "")
+        (quality-val (completing-read "Max height resolution (0 for unlimited): " '("0" "480" "720") nil nil)))
+    (setq quality-val (string-to-number quality-val))
+    (message "Opening %s with height≤%s with mpv..." (elfeed-entry-link entry) quality-val)
+    (when (< 0 quality-val)
+      (setq quality-arg (format "--ytdl-format=[height<=?%s]" quality-val)))
+    (start-process "elfeed-mpv" nil "mpv" quality-arg (elfeed-entry-link entry))))
+
+(defun elfeed-open-with-eww ()
+  "Open in eww with `eww-readable'."
+  (interactive)
+  (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single))))
+    (eww  (elfeed-entry-link entry))
+    (add-hook 'eww-after-render-hook 'eww-readable nil t)))
+
+(defun elfeed-visit-maybe-externally ()
+  "Visit with external function if entry link matches `elfeed-visit-patterns',
+show normally otherwise."
+  (interactive)
+  (let ((entry (if (eq major-mode 'elfeed-show-mode)
+                   elfeed-show-entry
+                 (elfeed-search-selected :single)))
+        (patterns elfeed-visit-patterns))
+    (while (and patterns (not (string-match (caar patterns) (elfeed-entry-link entry))))
+      (setq patterns (cdr patterns)))
+    (cond
+     (patterns
+      (funcall (cdar patterns)))
+     ((eq major-mode 'elfeed-search-mode)
+      (call-interactively 'elfeed-search-show-entry))
+     (t (elfeed-show-visit)))))
