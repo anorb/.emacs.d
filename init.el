@@ -154,8 +154,8 @@
   :map elfeed-search-mode-map
   ("o" . elfeed-visit-maybe-externally))
   :init
-  (setq elfeed-db-directory "~/Sync/elfeed/elfeeddb")
-  (setq-default elfeed-search-filter "@2-week-ago +unread"))
+  (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
+  (setq-default elfeed-search-filter "@2-week-ago +unread -archived"))
 
 (use-package elfeed-org
   :init
@@ -212,7 +212,7 @@
   (setq org-hide-leading-stars t)
   (setq org-ellipsis "⤵")
 
-  (setq org-directory "~/Sync/org/")
+  (setq org-directory "~/org/")
   (load-library "find-lisp")
   (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
 
@@ -234,7 +234,8 @@
           ("e" "emacs" entry (file+headline ,(concat org-directory "emacs.org") "Tasks")
            "* TODO %?\n")))
   (setq org-default-notes-file (concat org-directory "personal.org"))
-  (setq org-archive-location (concat org-directory "archive/%s_archive::")))
+  (setq org-archive-location (concat org-directory "archive/%s_archive::"))
+  (setq org-src-window-setup 'other-window))
 
 (use-package js2-mode
   :config
