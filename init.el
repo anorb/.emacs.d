@@ -179,7 +179,7 @@
   :init
   (projectile-mode)                     ; Enable projectile mode in all buffers
   (setq projectile-completion-system 'ivy)
-  (setq projectile-mode-line-fn
+  (setq projectile-mode-line-function
         (lambda ()
           (cond
            ((file-remote-p default-directory) " Projectile[*remote*]")
