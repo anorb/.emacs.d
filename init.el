@@ -283,7 +283,7 @@
 
 ;; Requires:
 ;; go get golang.org/x/tools/cmd/goimports
-;; go get https://github.com/nsf/gocode
+;; go get https://github.com/mdempsky/gocode
 (use-package go-mode
   :bind (:map go-mode-map ("M-." . 'godef-jump))
   :init
@@ -338,8 +338,12 @@
 (use-package flycheck-gometalinter
   :config
   (flycheck-gometalinter-setup)
-  (setq flycheck-gometalinter-deadline "10s")
-  (setq flycheck-gometalinter-fast t)) ; only run fast linters
+  (setq flycheck-gometalinter-disable-all t)
+  (setq flycheck-gometalinter-enable-linters
+        '("vet"
+          "vetshadow"
+          "golint"
+          "gocyclo")))
 
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
