@@ -62,6 +62,8 @@
 ;; Save buffers & window config on exit
 (desktop-save-mode 1)
 
+(setq delete-by-moving-to-trash t)
+
 ;; Kills dired buffers on emacs close
 (add-hook 'kill-emacs-hook #'kill-dired-buffers)
 
