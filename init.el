@@ -154,15 +154,22 @@
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
-  ("o" . elfeed-visit-maybe-externally))
+  ("o" . elfeed-visit-maybe-externally)
+  ("d" . elfeed-download-media))
   :init
   (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
-  (setq-default elfeed-search-filter "@2-week-ago +unread -archived"))
-
-(use-package elfeed-org
-  :init
-  (elfeed-org)
-  (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org")))
+  (setq-default elfeed-search-filter "@4-week-ago +unread")
+  :config
+  (defface elfeed-youtube
+    '((t :foreground "#2dfffb"))
+    "Marks YouTube videos in Elfeed."
+    :group 'elfeed)
+  (defface elfeed-podcast
+    '((t :foreground "#2dff92"))
+    "Marks Podcasts in Elfeed."
+    :group 'elfeed)
+  (push '(youtube elfeed-youtube) elfeed-search-face-alist)
+  (push '(podcast elfeed-podcast) elfeed-search-face-alist))
 
 (use-package undo-tree
   :delight

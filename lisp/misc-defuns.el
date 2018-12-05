@@ -157,7 +157,29 @@ If SYMBOLS is t, symbols will be added to the password."
     (insert generated-password)
     (funcall interprogram-cut-function generated-password)))
 
-;; elfeed functions courtesy of https://github.com/skeeto/elfeed/issues/267
+(defun elfeed-enclosure-yank ()
+  "Grab the enclosure URL and return it."
+  (let* ((entry (elfeed-search-selected t))
+         (url (replace-regexp-in-string "\\?.*$" "" (caar (elfeed-entry-enclosures entry)))))
+    url))
+
+(defun elfeed-link-yank ()
+  "Grab the enclosure URL and return it."
+  (let* ((entry (elfeed-search-selected t))
+         (url (elfeed-entry-link entry)))
+    url))
+
+(defun elfeed-download-media ()
+  "Download youtube videos and podcasts."
+  (interactive)
+  (let* ((entry (elfeed-search-selected t))
+         (tags (elfeed-entry-tags entry))
+         (url (cond ((member 'podcast tags) (elfeed-enclosure-yank))
+                    ((member 'youtube tags) (elfeed-link-yank)))))
+    (message "Downloading media from: %s" url)
+    (start-process "elfeed-youtube-dl" nil "youtube-dl" url "-o" "~/Downloads/%(title)s.%(ext)s")))
+
+;; these elfeed functions courtesy of https://github.com/skeeto/elfeed/issues/267
 (defun elfeed-play-with-mpv ()
   "Play entry link with mpv."
   (interactive)
