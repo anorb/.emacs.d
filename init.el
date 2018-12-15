@@ -225,23 +225,23 @@
   (load-library "find-lisp")
   (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
 
+  (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  (setq org-refile-use-outline-path 'file)
+  (setq org-outline-path-complete-in-steps nil)
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+
   (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
 
-  (defvar org-capture-templates
-        `(("t" "tech task" entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")
-           "* TODO %?\n")
-          ("n" "non-tech task" entry (file+headline ,(concat org-directory "personal.org") "Non-tech tasks")
-           "* TODO %?\n")
-          ("r" "research" entry (file+headline ,(concat org-directory "personal.org") "Research notes")
-           "* TODO %?\n")
-          ("s" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")
-           "* TODO %?\n")
-          ("f" "finance task" entry (file+headline ,(concat org-directory "finance.org") "Tasks")
-           "* TODO %?\n")
-          ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks")
-           "* TODO %?\n")
-          ("e" "emacs" entry (file+headline ,(concat org-directory "emacs.org") "Tasks")
-           "* TODO %?\n")))
+  (setq org-capture-templates
+        `(("p" "Personal templates")
+          ("pt" "tech task"     entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")     "* TODO %?\n")
+          ("pn" "non-tech task" entry (file+headline ,(concat org-directory "personal.org") "Non-tech tasks") "* TODO %?\n")
+          ("pr" "research"      entry (file+headline ,(concat org-directory "personal.org") "Research notes") "* TODO %?\n")
+          ("ps" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
+
+          ("f" "finance task" entry (file+headline ,(concat org-directory "finance.org") "Tasks") "* TODO %?\n")
+          ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
+          ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")))
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
