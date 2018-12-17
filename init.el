@@ -292,7 +292,7 @@
 
 ;; Requires:
 ;; go get golang.org/x/tools/cmd/goimports
-;; go get https://github.com/mdempsky/gocode
+;; go get github.com/stamblerre/gocode
 (use-package go-mode
   :bind (:map go-mode-map ("M-." . 'godef-jump))
   :init
@@ -437,6 +437,7 @@
 
 (use-package flycheck
   :hook (prog-mode . flycheck-mode)
+  :bind ("H-c" . flycheck-buffer)
   :init
   (defun disable-elisp-flycheck ()
     (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
