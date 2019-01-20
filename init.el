@@ -123,7 +123,6 @@
 (global-set-key (kbd "C-w") 'xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'xah-copy-line-or-region)
 
-(global-set-key (kbd "C-x 0") 'delete-window-balance)
 (global-set-key (kbd "C-x 2") 'split-window-below-focus)
 (global-set-key (kbd "C-x 3") 'split-window-right-focus)
 
@@ -161,12 +160,12 @@
   (setq-default elfeed-search-filter "@4-week-ago +unread")
   :config
   (defface elfeed-youtube
-    '((t :foreground "#2dfffb"))
-    "Marks YouTube videos in Elfeed."
+    '((t :inherit font-lock-constant-face))
+    "Colors YouTube videos in Elfeed."
     :group 'elfeed)
   (defface elfeed-podcast
-    '((t :foreground "#2dff92"))
-    "Marks Podcasts in Elfeed."
+    '((t :inherit font-lock-doc-face))
+    "Colors Podcasts in Elfeed."
     :group 'elfeed)
   (push '(youtube elfeed-youtube) elfeed-search-face-alist)
   (push '(podcast elfeed-podcast) elfeed-search-face-alist))
@@ -501,6 +500,8 @@
 (use-package lua-mode)
 
 (use-package ivy-pass)
+
+(use-package rainbow-mode)
 
 ;;; Load private config
 (load "~/.emacs.d/lisp/private.el")
