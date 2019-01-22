@@ -228,6 +228,7 @@
   (setq org-refile-use-outline-path 'file)
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-clock-display-default-range 'untilnow)
 
   (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
 
@@ -440,7 +441,8 @@
   :init
   (defun disable-elisp-flycheck ()
     (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-  (add-hook 'org-src-mode-hook 'disable-elisp-flycheck))
+  (add-hook 'org-src-mode-hook 'disable-elisp-flycheck)
+  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
 
 (use-package flycheck-irony
   :hook (flycheck-mode . flycheck-irony-setup))
