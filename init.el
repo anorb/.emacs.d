@@ -62,7 +62,11 @@
 ;; Save buffers & window config on exit
 (desktop-save-mode 1)
 
-(setq delete-by-moving-to-trash t)
+(setq delete-by-moving-to-trash t
+      sentence-end-double-space nil
+      display-time-24hr-format t
+      initial-scratch-message nil
+      eshell-hist-ignoredups t)
 
 ;; Kills dired buffers on emacs close
 (add-hook 'kill-emacs-hook #'kill-dired-buffers)
