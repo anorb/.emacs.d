@@ -476,8 +476,10 @@
   (setq nov-text-width 80))
 
 (use-package ag)
-
 (use-package delight) ; This is for using :delight with use-package as an optional dependency
+(use-package lua-mode)
+(use-package ivy-pass)
+(use-package rainbow-mode)
 
 ;; Requires:
 ;; aspell
@@ -488,6 +490,19 @@
   :init
   (setq ispell-program-name "aspell"
         ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
+
+;; Requires:
+;; wordnet
+(use-package synosaurus
+  :bind ("M-%" . synosaurus-choose-and-replace)
+  :config
+  (setq synosaurus-backend 'synosaurus-backend-wordnet)
+  (setq synosaurus-choose-method 'default))
+
+;; Requires:
+;; wordnet
+(use-package wordnut
+  :bind ("M-#" . wordnut-lookup-current-word))
 
 (use-package imenu-list
   :init
@@ -502,12 +517,6 @@
 (use-package web-server
   :ensure nil
   :load-path "lisp/web-server")
-
-(use-package lua-mode)
-
-(use-package ivy-pass)
-
-(use-package rainbow-mode)
 
 ;;; Load private config
 (load "~/.emacs.d/lisp/private.el")
