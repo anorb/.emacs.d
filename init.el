@@ -411,6 +411,8 @@
   :bind
   ("M-x" . counsel-M-x)
   ("C-x C-f" . counsel-find-file)
+  ("H-i" . counsel-imenu)
+  ("H-s" . counsel-ag)
   :config
   (ivy-set-actions
    'counsel-find-file
@@ -429,10 +431,11 @@
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this))
 
-(use-package spacemacs-theme
+(use-package solarized-theme
   :defer t
   :init
-  (load-theme 'spacemacs-light t))
+  (setq solarized-scale-org-headlines nil)
+  (setq solarized-high-contrast-mode-line t))
 
 (use-package irony
   :hook (c-mode . irony-mode)
