@@ -62,6 +62,20 @@
 ;; Save buffers & window config on exit
 (desktop-save-mode 1)
 
+(setq desktop-save t)
+(setq desktop-restore-eager 5)
+
+(defvar an/desktop-save nil
+  "Should Emacs save desktop when exiting?")
+
+(add-hook 'desktop-after-read-hook
+          (lambda () (setq an/desktop-save t)))
+
+(advice-add 'desktop-save :around
+            (lambda (fn &rest args)
+              (if (bound-and-true-p an/desktop-save)
+                  (apply fn args))))
+
 (setq delete-by-moving-to-trash t
       sentence-end-double-space nil
       display-time-24hr-format t
@@ -131,6 +145,8 @@
 (global-set-key (kbd "C-x 3") 'split-window-right-focus)
 
 (global-set-key (kbd "H-e") 'eshell)
+
+(global-set-key (kbd "C-x j") 'an/change-desktop)
 
 ;;; Built in packages
 (use-package autorevert
@@ -435,7 +451,8 @@
   :defer t
   :init
   (setq solarized-scale-org-headlines nil)
-  (setq solarized-high-contrast-mode-line t))
+  (setq solarized-high-contrast-mode-line t)
+  (load-theme 'solarized-light t))
 
 (use-package irony
   :hook (c-mode . irony-mode)
@@ -513,10 +530,6 @@
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
-(use-package bookmark+
-  :ensure nil
-  :load-path "lisp/bookmark+")
-;;
 (use-package web-server
   :ensure nil
   :load-path "lisp/web-server")
