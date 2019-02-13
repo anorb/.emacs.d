@@ -148,6 +148,10 @@
 
 (global-set-key (kbd "C-x j") 'an/change-desktop)
 
+(global-set-key (kbd "C-x d") 'dired)
+(global-set-key (kbd "C-x C-d") 'dired-jump)
+(global-set-key (kbd "C-x M-d") 'dired-other-window)
+
 ;;; Built in packages
 (use-package autorevert
   :delight auto-revert-mode
@@ -160,16 +164,6 @@
   (global-subword-mode 1))
 
 ;;; MELPA packages
-(use-package god-mode
-  :bind ("<escape>" . god-mode-all)
-  :init
-  (defun my-update-cursor ()
-    (setq cursor-type (if (or god-local-mode buffer-read-only)
-                          'hbar
-                        'box)))
-  (add-hook 'god-mode-enabled-hook 'my-update-cursor)
-  (add-hook 'god-mode-disabled-hook 'my-update-cursor))
-
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
@@ -333,11 +327,7 @@
 
 (use-package dired-subtree
   :bind (:map dired-mode-map
-              ("i" . dired-subtree-insert)
-              (";" . dired-subtree-remove)))
-
-(use-package dired-sidebar
-  :bind ("<f8>" . dired-sidebar-toggle-sidebar))
+              ("TAB" . dired-subtree-cycle)))
 
 (use-package company
   :delight
@@ -523,10 +513,6 @@
 ;; wordnet
 (use-package wordnut
   :bind ("M-#" . wordnut-lookup-current-word))
-
-(use-package imenu-list
-  :init
-  (setq imenu-list-auto-resize t))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
