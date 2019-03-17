@@ -197,17 +197,6 @@
   (global-git-gutter-mode 't)
   :delight)
 
-(use-package projectile
-  :init
-  (projectile-mode)                     ; Enable projectile mode in all buffers
-  (setq projectile-completion-system 'ivy)
-  (setq projectile-mode-line-function
-        (lambda ()
-          (cond
-           ((file-remote-p default-directory) " Projectile[*remote*]")
-           ((projectile-project-p) (format " [%s]" (projectile-project-name)))
-           (t "")))))
-
 (use-package eyebrowse
   :init
   (setq eyebrowse-keymap-prefix (kbd "C-z"))
@@ -393,6 +382,13 @@
 (use-package smartparens
   :delight smartparens-mode
   :hook (prog-mode . smartparens-mode)
+  :bind (:map smartparens-mode-map
+              ("C-H-f" . sp-forward-sexp)
+	      ("C-H-b" . sp-backward-sexp)
+              ("C-<right>" . sp-forward-slurp-sexp)
+	      ("C-<left>" . sp-forward-barf-sexp)
+	      ("C-<up>" . sp-backward-slurp-sexp)
+	      ("C-<down>" . sp-backward-barf-sexp))
   :init
   (setq sp-highlight-pair-overlay nil)
   :config

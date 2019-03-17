@@ -212,7 +212,7 @@ show normally otherwise."
   "Interface to easily switch desktops."
   (interactive)
   (let* ((desktops (remove "." (remove ".." (directory-files "~/.emacs.d/desktops"))))
-         (selection (completing-read "Change desktop:" desktops)))
+         (selection (completing-read "Change desktop: " desktops)))
     (desktop-read (format "%s%s" "~/.emacs.d/desktops/" selection))))
 
 (provide 'misc-defuns)
