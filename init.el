@@ -216,6 +216,10 @@
   (("C-c c" . org-capture)
   ("C-c a" . org-agenda))
   :init
+  (add-hook 'org-mode-hook #'(lambda ()
+			       (visual-line-mode)
+			       (org-indent-mode)))
+
   (defvar org-capture-bookmark nil)
   (setq org-log-done t)
   (setq org-log-into-drawer t)
@@ -244,7 +248,9 @@
 
           ("f" "finance task" entry (file+headline ,(concat org-directory "finance.org") "Tasks") "* TODO %?\n")
           ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
-          ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")))
+          ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
+
+          ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* %?\n")))
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
@@ -423,7 +429,7 @@
 
 (use-package swiper
   :bind
-  ("C-s" . swiper))
+  ("C-s" . swiper-isearch))
 
 (use-package smex) ; Used with counsel to get the recenently used commands
 
@@ -461,7 +467,9 @@
 
 (use-package markdown-mode)
 
-(use-package browse-kill-ring)
+(use-package browse-kill-ring
+  :bind
+  ("M-y" . browse-kill-ring))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
