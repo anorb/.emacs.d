@@ -364,7 +364,14 @@
   :hook (ledger-mode . flycheck-mode)
   :config
   (define-key ledger-mode-map (kbd "C-c c") 'ledger-mode-clean-buffer)
-  (use-package flycheck-ledger))
+  (use-package flycheck-ledger)
+  (setq ledger-reports
+        '(("this year" "%(binary) -f %(ledger-file) bal --period \"this year\" ^Expenses ^Income --invert")
+          ("last year" "%(binary) -f %(ledger-file) bal --period \"last year\" ^Expenses ^Income --invert")
+          ("bal"       "%(binary) -E -f %(ledger-file) bal")
+          ("reg"       "%(binary) -f %(ledger-file) reg")
+          ("payee"     "%(binary) -f %(ledger-file) reg @%(payee)")
+          ("account"   "%(binary) -f %(ledger-file) reg %(account)"))))
 
 (use-package slime
   :init
