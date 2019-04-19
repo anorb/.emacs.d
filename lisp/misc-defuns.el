@@ -1,6 +1,6 @@
 ;;; -*- lexical-binding: t; -*-
 
-(defun kill-dired-buffers ()
+(defun an/kill-dired-buffers ()
   "Kill all opened dired buffers."
   (interactive)
   (mapc (lambda (buffer)
@@ -9,22 +9,22 @@
         (buffer-list)))
 
 ;; Dealing with window scrolling
-(defun window-half-height ()
+(defun an/window-half-height ()
   "Return 50% of the window height for scrolling by half."
   (max 1 (/ (1- (window-height (selected-window))) 2)))
 
-(defun scroll-up-half ()
+(defun an/scroll-up-half ()
   "Scroll up the page by 50%."
   (interactive)
-  (scroll-up (window-half-height)))
+  (scroll-up (an/window-half-height)))
 
-(defun scroll-down-half ()
+(defun an/scroll-down-half ()
   "Scroll down the page by 50%."
   (interactive)
-  (scroll-down (window-half-height)))
+  (scroll-down (an/window-half-height)))
 
 ;; Cut & copy lines when cursor is over them
-(defun xah-copy-line-or-region ()
+(defun an/xah-copy-line-or-region ()
   "Copy current line, or text selection.
 When called repeatedly, append copy subsequent lines.
 When `universal-argument' is called first, copy whole
@@ -62,7 +62,7 @@ Version 2017-12-04"
             (forward-char)))))))
 
 
-(defun xah-cut-line-or-region ()
+(defun an/xah-cut-line-or-region ()
   "Cut current line, or text selection.
 When `universal-argument' is called first, cut whole
 buffer (respects `narrow-to-region').
@@ -82,15 +82,15 @@ Version 2015-06-10"
 
 ;; Modified version of...
 ;; http://jacek.zlydach.pl/blog/2018-05-29-serving-directories-over-http-with-emacs.html
-(defvar my/file-server nil "Is the file server running? Holds an instance if so.")
+(defvar an/file-server nil "Is the file server running? Holds an instance if so.")
 
-(defun my/serve-directory (directory port)
+(defun an/serve-directory (directory port)
   "Serve DIRECTORY over http via PORT."
   (interactive "DDirectory: \nnPort: ")
-  (if my/file-server
+  (if an/file-server
       (message "File server is already running.")
     (progn
-      (setq my/file-server
+      (setq an/file-server
             (let ((docroot directory))
               (ws-start
                (lambda (request)
@@ -108,34 +108,34 @@ Version 2015-06-10"
                :host "0.0.0.0")))
       (message "Serving directory %s on port %d" directory port))))
 
-(defun my/stop-server ()
+(defun an/stop-server ()
   "Stop the file server if running."
   (interactive)
-  (if my/file-server
+  (if an/file-server
       (progn
-        (ws-stop my/file-server)
-        (setf my/file-server nil)
+        (ws-stop an/file-server)
+        (setf an/file-server nil)
         (message "Stopped the file server."))
     (message "No file server is running.")))
 
-(defun split-window-below-focus ()
+(defun an/split-window-below-focus ()
   "Split window horizontally and move focus to other window."
   (interactive)
   (split-window-below)
   (other-window 1))
 
-(defun split-window-right-focus ()
+(defun an/split-window-right-focus ()
   "Split window vertically and move focus to other window."
   (interactive)
   (split-window-right)
   (other-window 1))
 
-(defun indent-buffer ()
+(defun an/indent-buffer ()
   "Indent the whole buffer."
   (interactive)
   (indent-region (point-min) (point-max)))
 
-(defun generate-new-password (length symbols)
+(defun an/generate-new-password (length symbols)
   "Generate a password with pwgen with LENGTH characters.
 
 If SYMBOLS is t, symbols will be added to the password."
@@ -149,49 +149,43 @@ If SYMBOLS is t, symbols will be added to the password."
     (insert generated-password)
     (funcall interprogram-cut-function generated-password)))
 
-(defun elfeed-enclosure-yank ()
+(defun an/elfeed-enclosure-yank ()
   "Grab the enclosure URL and return it."
   (let* ((entry (elfeed-search-selected t))
          (url (replace-regexp-in-string "\\?.*$" "" (caar (elfeed-entry-enclosures entry)))))
     url))
 
-(defun elfeed-link-yank ()
+(defun an/elfeed-link-yank ()
   "Grab the enclosure URL and return it."
   (let* ((entry (elfeed-search-selected t))
          (url (elfeed-entry-link entry)))
     url))
 
-(defun elfeed-download-media ()
+(defun an/elfeed-download-media ()
   "Download youtube videos and podcasts."
   (interactive)
   (let* ((entry (elfeed-search-selected t))
          (tags (elfeed-entry-tags entry))
-         (url (cond ((member 'podcast tags) (elfeed-enclosure-yank))
-                    ((member 'youtube tags) (elfeed-link-yank)))))
+         (url (cond ((member 'podcast tags) (an/elfeed-enclosure-yank))
+                    ((member 'youtube tags) (an/elfeed-link-yank)))))
     (message "Downloading media from: %s" url)
     (start-process "elfeed-youtube-dl" nil "youtube-dl" url "-o" "~/Downloads/%(title)s.%(ext)s")))
 
 ;; these elfeed functions courtesy of https://github.com/skeeto/elfeed/issues/267
-(defun elfeed-play-with-mpv ()
+(defun an/elfeed-play-with-mpv ()
   "Play entry link with mpv."
   (interactive)
-  (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single)))
-        (quality-arg "")
-        (quality-val (completing-read "Max height resolution (0 for unlimited): " '("0" "480" "720") nil nil)))
-    (setq quality-val (string-to-number quality-val))
-    (message "Opening %s with height≤%s with mpv..." (elfeed-entry-link entry) quality-val)
-    (when (< 0 quality-val)
-      (setq quality-arg (format "--ytdl-format=[height<=?%s]" quality-val)))
-    (start-process "elfeed-mpv" nil "mpv" quality-arg (elfeed-entry-link entry))))
+  (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single))))
+    (an/open-in-mpv (elfeed-entry-link entry))))
 
-(defun elfeed-open-with-eww ()
+(defun an/elfeed-open-with-eww ()
   "Open in eww with `eww-readable'."
   (interactive)
   (let ((entry (if (eq major-mode 'elfeed-show-mode) elfeed-show-entry (elfeed-search-selected :single))))
     (eww  (elfeed-entry-link entry))
     (add-hook 'eww-after-render-hook 'eww-readable nil t)))
 
-(defun elfeed-visit-maybe-externally ()
+(defun an/elfeed-visit-maybe-externally ()
   "Visit with external function if entry link matches `elfeed-visit-patterns',
 show normally otherwise."
   (interactive)
@@ -208,12 +202,62 @@ show normally otherwise."
       (call-interactively 'elfeed-search-show-entry))
      (t (elfeed-show-visit)))))
 
-(defun an/change-desktop()
+(defun an/elfeed-default-search ()
+  "Set elfeed search to my normal default."
+  (interactive)
+  (setq elfeed-search-filter "@6-week-ago +unread")
+  (elfeed-search-update--force))
+
+(defun an/elfeed-podcast-search ()
+  "Set elfeed to search unread podcasts."
+  (interactive)
+  (setq elfeed-search-filter "+podcast +unread")
+  (elfeed-search-update--force))
+
+(defun an/change-desktop ()
   "Interface to easily switch desktops."
   (interactive)
   (let* ((desktops (remove "." (remove ".." (directory-files "~/.emacs.d/desktops"))))
          (selection (completing-read "Change desktop: " desktops)))
     (desktop-read (format "%s%s" "~/.emacs.d/desktops/" selection))))
+
+(defun an/open-in-mpv (link)
+  "Open LINK in mpv."
+  (start-process "mpv" nil "gnome-mpv" link))
+
+;; org link yanking functions are modified versions of https://emacs.stackexchange.com/questions/3981/how-to-copy-links-out-of-org-mode
+(defun an/yank-org-link (text)
+  "Yank TEXT from org-link string."
+  (string-match org-bracket-link-regexp text)
+  (insert (substring text (match-beginning 1) (match-end 1))))
+
+(defun an/get-org-link-substring ()
+  "Get substring of org-link."
+  (let* ((link-info (assoc :link (org-context)))
+         (text (when link-info (buffer-substring-no-properties (or (cadr link-info) (point-min))
+                                                               (or (caddr link-info) (point-max))))))
+    text))
+
+(defun an/org-copy-link-at-point ()
+  "Copy org-link at point."
+  (interactive)
+  (let* ((text (an/get-org-link-substring)))
+    (if (not text)
+        (error "Not in org link")
+      (add-text-properties 0 (length text) '(yank-handler (an/yank-org-link)) text)
+      (kill-new text)
+      (string-match org-bracket-link-regexp text)
+      (funcall interprogram-cut-function (substring text (match-beginning 1) (match-end 1))))))
+
+(defun an/org-link-open-in-mpv ()
+  "Open org-link at point in mpv."
+  (interactive)
+  (let* ((text (an/get-org-link-substring)))
+    (if (not text)
+        (error "Not in org link")
+      (string-match org-bracket-link-regexp text)
+      (print (substring text (match-beginning 1) (match-end 1)))
+      (an/open-in-mpv (substring text (match-beginning 1) (match-end 1))))))
 
 (provide 'misc-defuns)
 

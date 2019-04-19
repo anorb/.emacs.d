@@ -83,7 +83,7 @@
       eshell-hist-ignoredups t)
 
 ;; Kills dired buffers on emacs close
-(add-hook 'kill-emacs-hook #'kill-dired-buffers)
+(add-hook 'kill-emacs-hook #'an/kill-dired-buffers)
 
 ;; ensure all package with use-package
 (defvar use-package-always-ensure t)
@@ -133,16 +133,16 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key [f5] 'revert-buffer)
 
-(global-set-key (kbd "M-v") 'scroll-up-half)
-(global-set-key (kbd "C-v") 'scroll-down-half)
+(global-set-key (kbd "M-v") 'an/scroll-up-half)
+(global-set-key (kbd "C-v") 'an/scroll-down-half)
 
 (global-set-key (kbd "M-o") 'other-window)
 
-(global-set-key (kbd "C-w") 'xah-cut-line-or-region)
-(global-set-key (kbd "M-w") 'xah-copy-line-or-region)
+(global-set-key (kbd "C-w") 'an/xah-cut-line-or-region)
+(global-set-key (kbd "M-w") 'an/xah-copy-line-or-region)
 
-(global-set-key (kbd "C-x 2") 'split-window-below-focus)
-(global-set-key (kbd "C-x 3") 'split-window-right-focus)
+(global-set-key (kbd "C-x 2") 'an/split-window-below-focus)
+(global-set-key (kbd "C-x 3") 'an/split-window-right-focus)
 
 (global-set-key (kbd "H-e") 'eshell)
 
@@ -167,11 +167,11 @@
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
-  ("o" . elfeed-visit-maybe-externally)
-  ("d" . elfeed-download-media))
+  ("o" . an/elfeed-visit-maybe-externally)
+  ("d" . an/elfeed-download-media))
   :init
   (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
-  (setq-default elfeed-search-filter "@4-week-ago +unread")
+  (setq-default elfeed-search-filter "@6-week-ago +unread")
   :config
   (defface elfeed-youtube
     '((t :inherit font-lock-constant-face))
