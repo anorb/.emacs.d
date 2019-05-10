@@ -78,7 +78,24 @@ Version 2015-06-10"
                (kill-region (region-beginning) (region-end) t)
              (kill-region (line-beginning-position) (line-beginning-position 2))))))
 
+;; From http://ergoemacs.org/emacs/emacs_kill-ring.html
+(defun an/delete-word (arg)
+  "Delete characters forward until encountering the end of a word.
+With argument, do this that many times.
+This command does not push text to `kill-ring'."
+  (interactive "p")
+  (delete-region
+   (point)
+   (progn
+     (forward-word arg)
+     (point))))
 
+(defun an/backward-delete-word (arg)
+  "Delete characters backward until encountering the beginning of a word.
+With argument, do this that many times.
+This command does not push text to `kill-ring'."
+  (interactive "p")
+  (an/delete-word (- arg)))
 
 ;; Modified version of...
 ;; http://jacek.zlydach.pl/blog/2018-05-29-serving-directories-over-http-with-emacs.html

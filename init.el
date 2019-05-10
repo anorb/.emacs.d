@@ -133,13 +133,17 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key [f5] 'revert-buffer)
 
-(global-set-key (kbd "M-v") 'an/scroll-up-half)
-(global-set-key (kbd "C-v") 'an/scroll-down-half)
+(global-set-key (kbd "C-v") 'an/scroll-up-half)
+(global-set-key (kbd "M-v") 'an/scroll-down-half)
 
 (global-set-key (kbd "M-o") 'other-window)
 
 (global-set-key (kbd "C-w") 'an/xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'an/xah-copy-line-or-region)
+
+(global-set-key (kbd "<C-backspace>") 'an/backward-delete-word)
+(global-set-key (kbd "M-DEL") 'an/backward-delete-word)
+(global-set-key (kbd "M-d") 'an/delete-word)
 
 (global-set-key (kbd "C-x 2") 'an/split-window-below-focus)
 (global-set-key (kbd "C-x 3") 'an/split-window-right-focus)
