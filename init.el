@@ -11,9 +11,8 @@
 ;;; Code:
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/")
-             '("org" . "https://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (package-initialize)
 
@@ -215,10 +214,14 @@
     (eyebrowse-mode t)
     (setq eyebrowse-new-workspace t)))
 
-(use-package org-mode
+(use-package org
+  :defer t
   :bind
-  (("C-c c" . org-capture)
-  ("C-c a" . org-agenda))
+  (("C-c c" . counsel-org-capture)
+   ("C-c a" . org-agenda)
+   :map org-mode-map
+   ("H-i" . counsel-org-goto)
+   ("H-u" . counsel-org-goto-all))
   :init
   (add-hook 'org-mode-hook #'(lambda ()
 			       (visual-line-mode)
@@ -240,8 +243,16 @@
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
   (setq org-clock-display-default-range 'untilnow)
+  (setq org-clock-mode-line-total 'today)
+
+  (setq org-catch-invisible-edits 'show-and-error)
+  (setq org-cycle-separator-lines 0)
 
   (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
 
   (setq org-capture-templates
         `(("p" "Personal templates")
@@ -254,10 +265,15 @@
           ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
           ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
 
-          ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* %?\n")))
+          ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %?\n")))
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
+
+;; Enables org easy templates
+(use-package org-tempo
+  :ensure nil
+  :after org)
 
 (use-package js2-mode
   :config
@@ -489,8 +505,8 @@
   :bind
   ;; ("C-M-<up>" . md/duplicate-up)
   ;; ("C-M-<down>" . md/duplicate-down)
-  ("M-p" . md/move-lines-up)
-  ("M-n" . md/move-lines-down))
+  ("M-p" . md-move-lines-up)
+  ("M-n" . md-move-lines-down))
 
 (use-package avy
   :bind ("C-r" . avy-goto-char-timer))
