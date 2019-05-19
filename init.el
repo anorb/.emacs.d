@@ -428,6 +428,9 @@
   (require 'smartparens-config)
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
 
+(use-package expand-region
+  :bind ("M-@" . er/expand-region))
+
 (use-package ivy
   :delight
   :init
