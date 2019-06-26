@@ -62,7 +62,6 @@
 (desktop-save-mode 1)
 
 (setq desktop-save t)
-(setq desktop-restore-eager 5)
 
 (defvar an/desktop-save nil
   "Should Emacs save desktop when exiting?")
@@ -154,6 +153,8 @@
 (global-set-key (kbd "C-x d") 'dired)
 (global-set-key (kbd "C-x C-d") 'dired-jump)
 (global-set-key (kbd "C-x M-d") 'dired-other-window)
+
+(global-set-key (kbd "C-x C-c") nil) ;; prevent save-buffers-kill-terminal keybind
 
 ;;; Built in packages
 (use-package autorevert
@@ -473,8 +474,12 @@
   :defer t
   :init
   (setq solarized-scale-org-headlines nil)
-  (setq solarized-high-contrast-mode-line t)
-  (load-theme 'solarized-light t))
+  (setq solarized-high-contrast-mode-line t))
+
+(use-package gruvbox-theme
+  :defer t
+  :init
+  (load-theme 'gruvbox-light-hard))
 
 (use-package irony
   :hook (c-mode . irony-mode)
