@@ -27,7 +27,7 @@
   (package-install 'use-package))
 
 (setq user-full-name "Austin Norberg"
-      user-mail-address "austin@norberg.tech")
+      user-mail-address "austin@norb.xyz")
 
 ;; Code formatting
 (setq tab-width 4)
@@ -125,7 +125,8 @@
                            (name . "^\\*Help\\*$"))))))
 
 ;;; Load misc-defuns for keybinds
-(load "~/.emacs.d/lisp/misc-defuns.el")
+(when (file-exists-p "~/.emacs.d/lisp/misc-defuns.el")
+  (load "~/.emacs.d/lisp/misc-defuns.el"))
 
 ;;; Custom keybinds
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -341,6 +342,9 @@
   :init
   (setq go-playground-basedir "~/Projects/go/src/playground"))
 
+(use-package flycheck-golangci-lint
+  :hook (go-mode . flycheck-golangci-lint-setup))
+
 (use-package dired-subtree
   :bind (:map dired-mode-map
               ("TAB" . dired-subtree-cycle)))
@@ -367,18 +371,6 @@
   :init
   (setq spray-margin-top 6))
   ;; (setq spray-margin-left (- (/ (window-body-width) 2) 5))
-
-;; go get -u github.com/alecthomas/gometalinter
-;; gometalinter --install
-(use-package flycheck-gometalinter
-  :config
-  (flycheck-gometalinter-setup)
-  (setq flycheck-gometalinter-disable-all t)
-  (setq flycheck-gometalinter-enable-linters
-        '("vet"
-          "vetshadow"
-          "golint"
-          "gocyclo")))
 
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
@@ -560,7 +552,8 @@
   :load-path "lisp/web-server")
 
 ;;; Load private config
-(load "~/.emacs.d/lisp/private.el")
+(when (file-exists-p "~/.emacs.d/lisp/private.el")
+  (load "~/.emacs.d/lisp/private.el"))
 
 (provide 'init)
 ;;; init.el ends here
