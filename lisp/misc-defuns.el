@@ -152,6 +152,17 @@ This command does not push text to `kill-ring'."
   (interactive)
   (indent-region (point-min) (point-max)))
 
+(defvar an/current-theme 'gruvbox-light-hard)
+
+(defun an/toggle-dark-theme ()
+  "Toggle between dark/light Emacs and GTK themes."
+  (interactive)
+  (let ((emacs-theme (if (eq an/current-theme 'gruvbox-light-hard) 'gruvbox-dark-hard 'gruvbox-light-hard))
+        (gtk-theme (if (eq an/current-theme 'gruvbox-light-hard) "'Adwaita-dark'" "'Adwaita'")))
+    (load-theme emacs-theme)
+    (start-process-shell-command "gsettings" nil (concat "gsettings set org.gnome.desktop.interface gtk-theme " gtk-theme))
+    (setq an/current-theme emacs-theme)))
+
 (defun an/generate-new-password (length symbols)
   "Generate a password with pwgen with LENGTH characters.
 
