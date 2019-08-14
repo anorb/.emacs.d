@@ -172,8 +172,7 @@
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
-  ("o" . an/elfeed-visit-maybe-externally)
-  ("d" . an/elfeed-download-media))
+  ("C-c e" . an/hydra-elfeed/body))
   :init
   (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
   (setq-default elfeed-search-filter "@6-week-ago +unread")
@@ -501,12 +500,7 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package move-dup
-  :bind
-  ;; ("C-M-<up>" . md/duplicate-up)
-  ;; ("C-M-<down>" . md/duplicate-down)
-  ("M-p" . md-move-lines-up)
-  ("M-n" . md-move-lines-down))
+(use-package move-dup)
 
 (use-package avy
   :bind ("C-r" . avy-goto-char-timer))
@@ -544,6 +538,54 @@
 ;; wordnet
 (use-package wordnut
   :bind ("M-#" . wordnut-lookup-current-word))
+
+(use-package hydra
+  :defer t
+  :bind (("C-c o" . an/hydra-org/body)
+         ("C-c m" . an/hydra-move-dup/body))
+  :init
+  (defhydra an/hydra-org (:hint nil)
+    "
+^Clock^                    ^Capture^           ^Search
+-----------------------------------------------------
+_i_ clock in               _c_: capture        _g_: goto header in file
+_o_ clock out              _L_: last stored    _G_: goto header in all
+_j_ goto current clock
+_l_ goto last clock
+_t_ toggle mode line total
+_d_ display time
+^ ^
+"
+    ;; Clock
+    ("i" org-clock-in :exit t)
+    ("o" org-clock-out :exit t)
+    ("j" org-clock-goto)
+    ("l" org-clock-in-last :exit t)
+    ("t" toggle-org-clock-mode-line-total-setting)
+    ("d" org-clock-display)
+    ;; Capture
+    ("c" counsel-org-capture)
+    ("L" org-capture-goto-last-stored)
+    ;; Search
+    ("g" counsel-org-goto)
+    ("G" counsel-org-goto-all)
+    ;; Misc
+    ("q" nil "cancel"))
+
+  (defhydra an/hydra-elfeed ()
+    "elfeed"
+    ("d" (elfeed-search-set-filter "@6-weeks-ago +unread") "Default")
+    ("p" (elfeed-search-set-filter "+podcast +unread") "Podcasts")
+    ("o" an/elfeed-visit-maybe-externally "Open" :exit t)
+    ("D" an/elfeed-download-media "Download" :exit t)
+    ("q" nil "quit"))
+
+  (defhydra an/hydra-move-dup ()
+    "Move/dup:"
+    ("u" md-move-lines-up "move up")
+    ("d" md-move-lines-down "move down")
+    ("U" md-duplicate-up "duplicate up")
+    ("D" md-duplicate-down "duplicate down")))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
