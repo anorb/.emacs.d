@@ -230,18 +230,6 @@ show normally otherwise."
       (call-interactively 'elfeed-search-show-entry))
      (t (elfeed-show-visit)))))
 
-(defun an/elfeed-default-search ()
-  "Set elfeed search to my normal default."
-  (interactive)
-  (setq elfeed-search-filter "@6-week-ago +unread")
-  (elfeed-search-update--force))
-
-(defun an/elfeed-podcast-search ()
-  "Set elfeed to search unread podcasts."
-  (interactive)
-  (setq elfeed-search-filter "+podcast +unread")
-  (elfeed-search-update--force))
-
 (defun an/change-desktop ()
   "Interface to easily switch desktops."
   (interactive)
@@ -286,6 +274,37 @@ show normally otherwise."
       (string-match org-bracket-link-regexp text)
       (print (substring text (match-beginning 1) (match-end 1)))
       (an/open-in-mpv (substring text (match-beginning 1) (match-end 1))))))
+
+;; Org clock mode line functionality from...
+;; http://mbork.pl/2019-05-11_Toggling_modeline_clock_display
+(setq org-clock-mode-line-total-settings
+      '((current . "time spent in this chunk on the current task")
+	(today . "time spent today on the current task")
+	(all . "total time spent on the current task")))
+(setq org-clock-mode-line-total-setting-number 0)
+
+(defun toggle-org-clock-mode-line-total-setting (setting-number)
+  "Toggle between org-clock-mode-line-total settings.
+With a numeric argument, use setting SETTING-NUMBER."
+  (interactive "P")
+  (if (numberp setting-number)
+      (setq org-clock-mode-line-total-setting-number
+	    (mod setting-number (length org-clock-mode-line-total-settings)))
+    (setq org-clock-mode-line-total-setting-number
+	  (mod (1+ org-clock-mode-line-total-setting-number)
+	       (length org-clock-mode-line-total-settings))))
+  (let ((org-clock-mode-line-total-setting (nth org-clock-mode-line-total-setting-number
+						org-clock-mode-line-total-settings)))
+    (setq org-clock-mode-line-total (car org-clock-mode-line-total-setting))
+    (when (org-clocking-p)
+      (setq org-clock-total-time
+	    (with-current-buffer (marker-buffer org-clock-hd-marker)
+	      (save-excursion (goto-char org-clock-hd-marker)
+			      (org-clock-sum-current-item
+			       (org-clock-get-sum-start)))))
+      (org-clock-update-mode-line))
+    (message "Modeline shows %s."
+	     (cdr org-clock-mode-line-total-setting))))
 
 (provide 'misc-defuns)
 

@@ -276,6 +276,27 @@
   :ensure nil
   :after org)
 
+(use-package org-super-agenda
+  :config
+  (org-super-agenda-mode t)
+  (setq org-super-agenda-groups '((:name "Schedule" :time-grid t)
+                                  (:name "Recurring" :tag "recurring")
+                                  (:name "Today" :scheduled today)
+                                  (:name "Due today" :deadline today)
+                                  (:name "Overdue" :scheduled past)
+                                  (:name "Due soon" :deadline future)
+                                  (:name "Dates" :category "people")))
+
+  (setq org-agenda-custom-commands
+        '(("t" "All TODOs groups by category" todo ""
+           ((org-super-agenda-groups
+             '((:discard (:and (:not (:todo "TODO")) :category "people" :tag "recurring"))
+               (:auto-category t)))))
+          ("b" "View reading list" todo ""
+           ((org-super-agenda-groups
+             '((:discard (:not (:and (:not (:todo ("TODO")) :category "books"))))
+               (:auto-parent t))))))))
+
 (use-package js2-mode
   :config
   ;; Turn off js2 mode errors & warnings
@@ -479,7 +500,7 @@
 
 (use-package flycheck
   :hook (prog-mode . flycheck-mode)
-  :bind ("H-c" . flycheck-buffer)
+  :bind ("C-H-c" . flycheck-buffer)
   :init
   (defun disable-elisp-flycheck ()
     (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
