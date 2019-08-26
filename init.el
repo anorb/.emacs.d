@@ -421,12 +421,8 @@
   :delight yas-minor-mode
   :hook (prog-mode . yas-minor-mode)
   :config
-  (setq yas-snippet-dirs
-        '(yasnippet-snippets-dir
-          "~/.emacs.d/snippets"))
+  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
   (yas-reload-all))
-
-(use-package yasnippet-snippets)
 
 (use-package smartparens
   :delight smartparens-mode
