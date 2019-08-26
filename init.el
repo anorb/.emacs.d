@@ -395,8 +395,8 @@
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
   :hook (ledger-mode . flycheck-mode)
+  :bind (:map ledger-mode-map ("C-c c" . 'an/hydra-ledger/body))
   :config
-  (define-key ledger-mode-map (kbd "C-c c") 'ledger-mode-clean-buffer)
   (use-package flycheck-ledger)
   (setq ledger-reports
         '(("this year" "%(binary) -f %(ledger-file) bal --period \"this year\" ^Expenses ^Income --invert")
@@ -550,20 +550,22 @@
 ;; Requires:
 ;; wordnet
 (use-package synosaurus
-  :bind ("M-%" . synosaurus-choose-and-replace)
   :config
   (setq synosaurus-backend 'synosaurus-backend-wordnet)
   (setq synosaurus-choose-method 'default))
 
 ;; Requires:
 ;; wordnet
-(use-package wordnut
-  :bind ("M-#" . wordnut-lookup-current-word))
+(use-package wordnut)
+
+(use-package speed-type)
 
 (use-package hydra
   :defer t
   :bind (("C-c o" . an/hydra-org/body)
-         ("C-c m" . an/hydra-move-dup/body))
+         ("C-c m" . an/hydra-move-dup/body)
+         ("C-c s" . an/hydra-spell/body)
+         ("C-c g" . an/hydra-go-to-file/body))
   :init
   (defhydra an/hydra-org (:hint nil)
     "
@@ -602,11 +604,31 @@ _d_ display time
     ("q" nil "quit"))
 
   (defhydra an/hydra-move-dup ()
-    "Move/dup:"
+    "Move/dup"
     ("u" md-move-lines-up "move up")
     ("d" md-move-lines-down "move down")
     ("U" md-duplicate-up "duplicate up")
-    ("D" md-duplicate-down "duplicate down")))
+    ("D" md-duplicate-down "duplicate down"))
+
+  ;; Following hydras inspired by...
+  ;; https://github.com/rememberYou/.emacs.d/blob/master/config.org#hydra
+  (defhydra an/hydra-spell ()
+    "Spelling"
+    ("t" synosaurus-choose-and-replace "Find synonym and replace" :exit t)
+    ("s" wordnut-lookup-current-word "Lookup current word" :exit t))
+
+  (defhydra an/hydra-ledger ()
+    "Ledger"
+    ("b" leadger-add-transaction "add" :exit t)
+    ("c" ledger-mode-clean-buffer "clear" :exit t)
+    ("i" ledger-copy-transaction-at-point "copy" :exit t)
+    ("s" ledger-delete-current-transaction "delete" :exit t)
+    ("r" ledger-report "report" :exit t))
+
+  (defhydra an/hydra-go-to-file ()
+    "Go to"
+    ("e" (find-file "~/.emacs.d/init.el") "init.el" :exit t)
+    ("b" (find-file "~/.bashrc") ".bashrc" :exit t)))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
