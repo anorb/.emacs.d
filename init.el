@@ -13,6 +13,7 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 (package-initialize)
 
@@ -223,6 +224,7 @@
    :map org-mode-map
    ("H-i" . counsel-org-goto)
    ("H-u" . counsel-org-goto-all))
+  :custom (org-modules '(org-tempo org-habit))
   :init
   (add-hook 'org-mode-hook #'(lambda ()
 			       (visual-line-mode)
@@ -238,6 +240,11 @@
   (setq org-directory "~/org/")
   (load-library "find-lisp")
   (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
+
+  (setq org-habit-show-all-today t)
+  (setq org-habit-preceding-days 21)
+  (setq org-habit-following-days 7)
+  (setq org-habit-graph-column 50)
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
   (setq org-refile-use-outline-path 'file)
@@ -271,15 +278,11 @@
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
 
-;; Enables org easy templates
-(use-package org-tempo
-  :ensure nil
-  :after org)
-
 (use-package org-super-agenda
   :config
   (org-super-agenda-mode t)
   (setq org-super-agenda-groups '((:name "Schedule" :time-grid t)
+                                  (:name "Habits" :habit t)
                                   (:name "Recurring" :tag "recurring")
                                   (:name "Today" :scheduled today)
                                   (:name "Due today" :deadline today)
