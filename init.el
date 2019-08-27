@@ -401,6 +401,10 @@
   :bind (:map ledger-mode-map ("C-c c" . 'an/hydra-ledger/body))
   :config
   (use-package flycheck-ledger)
+  (add-hook 'ledger-mode-hook (lambda ()
+                                (setq-local tab-always-indent 'complete)
+                                (setq-local completion-ignore-case t)
+                                (setq-local ledger-complete-in-steps t)))
   (setq ledger-reports
         '(("this year" "%(binary) -f %(ledger-file) bal --period \"this year\" ^Expenses ^Income --invert")
           ("last year" "%(binary) -f %(ledger-file) bal --period \"last year\" ^Expenses ^Income --invert")
@@ -618,7 +622,7 @@ _d_ display time
 
   (defhydra an/hydra-ledger ()
     "Ledger"
-    ("b" leadger-add-transaction "add" :exit t)
+    ("a" ledger-add-transaction "add" :exit t)
     ("c" ledger-mode-clean-buffer "clear" :exit t)
     ("i" ledger-copy-transaction-at-point "copy" :exit t)
     ("s" ledger-delete-current-transaction "delete" :exit t)
