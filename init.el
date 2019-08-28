@@ -639,6 +639,10 @@ _d_ display time
   :ensure nil
   :load-path "lisp/web-server")
 
+(use-package org-archive-subtree-hierarchical
+  :ensure nil
+  :load-path "lisp/org-archive-subtree-hierarchical")
+
 ;;; Load private config
 (when (file-exists-p "~/.emacs.d/lisp/private.el")
   (load "~/.emacs.d/lisp/private.el"))
