@@ -224,7 +224,7 @@
    :map org-mode-map
    ("H-i" . counsel-org-goto)
    ("H-u" . counsel-org-goto-all))
-  :custom (org-modules '(org-tempo org-habit))
+  :custom (org-modules '(org-tempo org-habit org-checklist))
   :init
   (add-hook 'org-mode-hook #'(lambda ()
 			       (visual-line-mode)
@@ -274,6 +274,11 @@
           ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
 
           ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %?\n")))
+
+  (setq org-link-abbrev-alist
+        '(("ddg"  . "https://duckduckgo.com/?q=%s")
+          ("wiki" . "https://en.wikipedia.org/w/index.php?search=%s")))
+
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))

@@ -199,6 +199,11 @@ If SYMBOLS is t, symbols will be added to the password."
     (message "Downloading media from: %s" url)
     (start-process "elfeed-youtube-dl" nil "youtube-dl" url "-o" "~/Downloads/%(title)s.%(ext)s")))
 
+(defun an/elfeed-open-with-epiphany ()
+  "Open link in Epiphany."
+  (interactive)
+  (start-process "epiphany" nil "epiphany" (an/elfeed-link-yank)))
+
 ;; these elfeed functions courtesy of https://github.com/skeeto/elfeed/issues/267
 (defun an/elfeed-play-with-mpv ()
   "Play entry link with mpv."
@@ -239,7 +244,7 @@ show normally otherwise."
 
 (defun an/open-in-mpv (link)
   "Open LINK in mpv."
-  (start-process "mpv" nil "gnome-mpv" link))
+  (start-process "mpv" nil "celluloid" link))
 
 ;; org link yanking functions are modified versions of https://emacs.stackexchange.com/questions/3981/how-to-copy-links-out-of-org-mode
 (defun an/yank-org-link (text)
@@ -274,6 +279,22 @@ show normally otherwise."
       (string-match org-bracket-link-regexp text)
       (print (substring text (match-beginning 1) (match-end 1)))
       (an/open-in-mpv (substring text (match-beginning 1) (match-end 1))))))
+
+(defun an/replace-angled-quotes ()
+  "Replace all angled single & double quotes with straight variant in buffer."
+  (interactive)
+  (goto-char 1)
+  (while (re-search-forward "”" nil t)
+    (replace-match "\""))
+  (goto-char 1)
+  (while (re-search-forward "“" nil t)
+    (replace-match "\""))
+  (goto-char 1)
+  (while (re-search-forward "’" nil t)
+    (replace-match "'"))
+  (goto-char 1)
+  (while (re-search-forward "‘" nil t)
+    (replace-match "'")))
 
 ;; Org clock mode line functionality from...
 ;; http://mbork.pl/2019-05-11_Toggling_modeline_clock_display
