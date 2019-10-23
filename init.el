@@ -169,6 +169,10 @@
   :init
   (global-subword-mode 1))
 
+(use-package rmail
+  :init
+  (setq rmail-file-name "~/Documents/system-mail"))
+
 ;;; MELPA packages
 (use-package elfeed
   :bind (("C-x w" . elfeed)
@@ -278,7 +282,7 @@
   (setq org-link-abbrev-alist
         '(("ddg"  . "https://duckduckgo.com/?q=%s")
           ("wiki" . "https://en.wikipedia.org/w/index.php?search=%s")))
-
+  (org-link-set-parameters "epiphany" :follow (lambda (path) (browse-url-epiphany path)))
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
@@ -628,9 +632,9 @@ _d_ display time
   (defhydra an/hydra-ledger ()
     "Ledger"
     ("a" ledger-add-transaction "add" :exit t)
-    ("c" ledger-mode-clean-buffer "clear" :exit t)
-    ("i" ledger-copy-transaction-at-point "copy" :exit t)
-    ("s" ledger-delete-current-transaction "delete" :exit t)
+    ("c" ledger-copy-transaction-at-point "copy" :exit t)
+    ("C" ledger-mode-clean-buffer "clear" :exit t)
+    ("d" ledger-delete-current-transaction "delete" :exit t)
     ("r" ledger-report "report" :exit t))
 
   (defhydra an/hydra-go-to-file ()
