@@ -13,7 +13,6 @@
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 (package-initialize)
 
@@ -177,7 +176,8 @@
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
-  ("C-c e" . an/hydra-elfeed/body))
+  ("C-c e" . an/hydra-elfeed/body)
+  ("o" . an/elfeed-visit-maybe-externally))
   :init
   (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
   (setq-default elfeed-search-filter "@6-week-ago +unread")
@@ -283,6 +283,7 @@
         '(("ddg"  . "https://duckduckgo.com/?q=%s")
           ("wiki" . "https://en.wikipedia.org/w/index.php?search=%s")))
   (org-link-set-parameters "epiphany" :follow (lambda (path) (browse-url-epiphany path)))
+  (org-link-set-parameters "eww" :follow (lambda (path) (eww path)))
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
@@ -480,7 +481,9 @@
   (ivy-set-actions
    'counsel-find-file
    '(("x" find-file-other-window "other window")
-     ("d" delete-file "delete"))))
+     ("d" delete-file "delete")))
+  ;; Couldn't find a better way to set initial input for ivy so we'll try this
+  (add-to-list 'ivy-initial-inputs-alist '(counsel-M-x . "")))
 
 (use-package swiper
   :bind
@@ -545,9 +548,12 @@
 
 (use-package ag)
 (use-package delight) ; This is for using :delight with use-package as an optional dependency
-(use-package lua-mode)
 (use-package ivy-pass)
 (use-package rainbow-mode)
+
+(use-package lua-mode
+  :init
+  (setq lua-indent-level 4))
 
 ;; Requires:
 ;; aspell
