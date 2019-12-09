@@ -426,7 +426,6 @@
 (use-package slime
   :init
   (setq inferior-lisp-program "/usr/bin/sbcl")
-  ;; (setq inferior-lisp-program "/usr/bin/clisp")
   (setq slime-contribs '(slime-fancy slime-company)))
 
 (use-package slime-company)
@@ -550,10 +549,8 @@
 (use-package delight) ; This is for using :delight with use-package as an optional dependency
 (use-package ivy-pass)
 (use-package rainbow-mode)
+(use-package lua-mode)
 
-(use-package lua-mode
-  :init
-  (setq lua-indent-level 4))
 
 ;; Requires:
 ;; aspell
