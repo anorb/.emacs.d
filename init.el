@@ -288,12 +288,20 @@
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
 
+(use-package org-drill
+  :init
+  (setq org-drill-add-random-noise-to-intervals-p t)
+  (setq org-drill-learn-fraction 0.5))
+
+(use-package org-drill-table)
+
 (use-package org-super-agenda
   :config
   (org-super-agenda-mode t)
   (setq org-super-agenda-groups '((:name "Schedule" :time-grid t)
                                   (:name "Habits" :habit t)
                                   (:name "Recurring" :tag "recurring")
+                                  (:name "Flashcards" :tag "drill")
                                   (:name "Today" :scheduled today)
                                   (:name "Due today" :deadline today)
                                   (:name "Overdue" :scheduled past)
