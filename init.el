@@ -496,6 +496,12 @@
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this))
 
+(use-package dumb-jump
+  :bind ("C-c j" . an/hydra-dumb-jump/body)
+  :init
+  (setq dumb-jump-selector 'ivy)
+  (setq dumb-jump-default-project "~/Projects"))
+
 (use-package solarized-theme
   :defer t
   :init
@@ -643,7 +649,17 @@ _d_ display time
   (defhydra an/hydra-go-to-file ()
     "Go to"
     ("e" (find-file "~/.emacs.d/init.el") "init.el" :exit t)
-    ("b" (find-file "~/.bashrc") ".bashrc" :exit t)))
+    ("b" (find-file "~/.bashrc") ".bashrc" :exit t))
+
+  (defhydra an/hydra-dumb-jump (:color blue :columns 3)
+    "Dumb Jump"
+    ("j" dumb-jump-go "Go")
+    ("o" dumb-jump-go-other-window "Other window")
+    ("e" dumb-jump-go-prefer-external "Go external")
+    ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
+    ("i" dumb-jump-go-prompt "Prompt")
+    ("l" dumb-jump-quick-look "Quick look")
+    ("b" dumb-jump-back "Back")))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
