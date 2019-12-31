@@ -510,16 +510,11 @@
   (setq dumb-jump-selector 'ivy)
   (setq dumb-jump-default-project "~/Projects"))
 
-(use-package solarized-theme
-  :defer t
+(use-package modus-operandi-theme
   :init
-  (setq solarized-scale-org-headlines nil)
-  (setq solarized-high-contrast-mode-line t))
+  (load-theme 'modus-vivendi))
 
-(use-package gruvbox-theme
-  :defer t
-  :init
-  (load-theme 'gruvbox-light-hard))
+(use-package modus-vivendi-theme)
 
 (use-package irony
   :hook (c-mode . irony-mode)
