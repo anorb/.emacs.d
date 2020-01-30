@@ -135,8 +135,6 @@
 (global-set-key (kbd "C-v") 'an/scroll-up-half)
 (global-set-key (kbd "M-v") 'an/scroll-down-half)
 
-(global-set-key (kbd "M-o") 'other-window)
-
 (global-set-key (kbd "C-w") 'an/xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'an/xah-copy-line-or-region)
 
@@ -200,6 +198,12 @@
   ("<f10>" . 'redo)
   :init
   (global-undo-tree-mode))
+
+(use-package ace-window
+  :bind (("M-o" . ace-window))
+  :config
+  (ace-window-display-mode 1)
+  (setq aw-background nil))
 
 (use-package git-gutter
   :init
@@ -569,7 +573,7 @@
   :hook (text-mode . flyspell-mode)
   :init
   (setq ispell-program-name "aspell"
-        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")))
+        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--personal=.config/aspell/.aspell.en.pws")))
 
 ;; Requires:
 ;; wordnet
