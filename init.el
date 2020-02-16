@@ -625,7 +625,7 @@ _d_ display time
 
   (defhydra an/hydra-elfeed ()
     "elfeed"
-    ("d" (elfeed-search-set-filter "@6-weeks-ago +unread") "Default")
+    ("d" (elfeed-search-clear-filter) "Default")
     ("p" (elfeed-search-set-filter "+podcast +unread") "Podcasts")
     ("o" an/elfeed-visit-maybe-externally "Open" :exit t)
     ("D" an/elfeed-download-media "Download" :exit t)
