@@ -62,6 +62,7 @@
 (desktop-save-mode 1)
 
 (setq desktop-save t)
+(setq ad-redefinition-action 'accept)
 
 (defvar an/desktop-save nil
   "Should Emacs save desktop when exiting?")
@@ -206,9 +207,9 @@
   (setq aw-background nil))
 
 (use-package git-gutter
+  :delight
   :init
-  (global-git-gutter-mode 't)
-  :delight)
+  (global-git-gutter-mode 1))
 
 (use-package eyebrowse
   :init
@@ -472,13 +473,12 @@
   :delight
   :init
   (ivy-mode 1)
-  :config
   (setq ivy-count-format "%d/%d "
         ivy-display-style 'fancy
         ivy-initial-inputs-alist nil))
 
 (use-package ivy-rich
-  :init
+  :config
   (ivy-rich-mode 1)
   (setq ivy-rich-path-style 'abbrev))
 
