@@ -374,29 +374,29 @@
 (use-package indent-guide
   :delight)
 
-;; Requires:
-;; go get golang.org/x/tools/cmd/goimports
-;; go get github.com/stamblerre/gocode
 (use-package go-mode
-  :bind (:map go-mode-map ("M-." . 'godef-jump))
+  :hook ((go-mode . lsp-deferred)
+         (before-save . lsp-format-buffer)
+         (before-save . lsp-organize-imports)))
+
+;; To get the latest version of gopls:
+;; go get golang.org/x/tools/gopls@latest
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :config
+  (setq lsp-enable-snippet nil
+        lsp-enable-folding nil
+        lsp-eldoc-render-all t))
+
+(use-package company-lsp
+  :commands company-lsp
   :init
-  (setq gofmt-command "goimports")
-  (add-hook 'before-save-hook 'gofmt-before-save))
-
-(use-package go-eldoc
-  :hook (go-mode . go-eldoc-setup))
-
-;; Integration of the 'gorename' tool into Emacs.
-;; go get golang.org/x/tools/cmd/gorename
-;; go build golang.org/x/tools/cmd/gorename
-(use-package go-rename) ; requires go-rename binary
+  (setq company-tooltip-align-annotations t
+        company-minimum-prefix-length 1))
 
 (use-package go-playground
   :init
   (setq go-playground-basedir "~/Projects/go/src/playground"))
-
-(use-package flycheck-golangci-lint
-  :hook (go-mode . flycheck-golangci-lint-setup))
 
 (use-package dired-subtree
   :bind (:map dired-mode-map
@@ -408,17 +408,9 @@
   :init
   (defvar company-dabbrev-downcase nil))
 
-(use-package company-go
-  :config
-  (add-to-list 'company-backends 'company-go))
-
 (use-package company-irony
   :config
   (add-to-list 'company-backends 'company-irony))
-
-(use-package company-quickhelp
-  :init
-  (company-quickhelp-mode 1))
 
 (use-package spray
   :init
