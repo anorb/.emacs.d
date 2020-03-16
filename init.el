@@ -295,8 +295,11 @@
 
 (use-package org-drill
   :init
-  (setq org-drill-add-random-noise-to-intervals-p t)
-  (setq org-drill-learn-fraction 0.5))
+  (setq org-drill-add-random-noise-to-intervals-p t
+        org-drill-learn-fraction 0.20
+        org-drill-maximum-duration 20
+        org-drill-leech-method 'warn
+        org-drill-save-buffers-after-drill-sessions-p nil))
 
 (use-package org-drill-table)
 
@@ -306,7 +309,7 @@
   (setq org-super-agenda-groups '((:name "Schedule" :time-grid t)
                                   (:name "Habits" :habit t)
                                   (:name "Recurring" :tag "recurring")
-                                  (:name "Flashcards" :tag "drill")
+                                  (:discard  (:tag "drill"))
                                   (:name "Today" :scheduled today)
                                   (:name "Due today" :deadline today)
                                   (:name "Overdue" :scheduled past)
@@ -321,6 +324,10 @@
           ("b" "View reading list" todo ""
            ((org-super-agenda-groups
              '((:discard (:not (:and (:not (:todo ("TODO")) :category "books"))))
+               (:auto-parent t)))))
+          ("f" "Flash cards" tags "drill"
+           ((org-super-agenda-groups
+             '((:discard (:not (:scheduled today :scheduled past)))
                (:auto-parent t))))))))
 
 (use-package js2-mode
