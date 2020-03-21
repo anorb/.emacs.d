@@ -171,6 +171,11 @@
   :init
   (setq rmail-file-name "~/Documents/system-mail"))
 
+(use-package browse-url
+  :init
+  (setq browse-url-browser-function '(("file://" . eww-browse-url)
+                                      ("." . browse-url-default-browser))))
+
 ;;; MELPA packages
 (use-package elfeed
   :bind (("C-x w" . elfeed)
@@ -438,7 +443,8 @@
 (use-package slime
   :init
   (setq inferior-lisp-program "/usr/bin/sbcl")
-  (setq slime-contribs '(slime-fancy slime-company)))
+  (setq slime-contribs '(slime-fancy slime-company))
+  (setq common-lisp-hyperspec-root (concat "file://" (expand-file-name "~/Projects/lisp/HyperSpec/"))))
 
 (use-package slime-company)
 
