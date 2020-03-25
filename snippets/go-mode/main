@@ -4,5 +4,5 @@
 # key: main
 # --
 func main() {
-  $0
+     $0
 }
