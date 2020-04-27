@@ -176,6 +176,9 @@
   (setq browse-url-browser-function '(("file://" . eww-browse-url)
                                       ("." . browse-url-default-browser))))
 
+(use-package c-mode
+  :hook (c-mode . lsp))
+
 ;;; MELPA packages
 (use-package elfeed
   :bind (("C-x w" . elfeed)
@@ -394,10 +397,7 @@
         lsp-eldoc-render-all t))
 
 (use-package company-lsp
-  :commands company-lsp
-  :init
-  (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 1))
+  :commands company-lsp)
 
 (use-package go-playground
   :init
@@ -411,11 +411,9 @@
   :delight
   :hook (prog-mode . company-mode)
   :init
-  (defvar company-dabbrev-downcase nil))
-
-(use-package company-irony
-  :config
-  (add-to-list 'company-backends 'company-irony))
+  (defvar company-dabbrev-downcase nil)
+  (setq company-tooltip-align-annotations t
+        company-minimum-prefix-length 1))
 
 (use-package spray
   :init
@@ -525,11 +523,6 @@
 
 (use-package modus-vivendi-theme)
 
-(use-package irony
-  :hook (c-mode . irony-mode)
-  :init
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
 (use-package flycheck
   :hook (prog-mode . flycheck-mode)
   :bind ("C-H-c" . flycheck-buffer)
@@ -538,9 +531,6 @@
     (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
   (add-hook 'org-src-mode-hook 'disable-elisp-flycheck)
   (setq flycheck-check-syntax-automatically '(mode-enabled save)))
-
-(use-package flycheck-irony
-  :hook (flycheck-mode . flycheck-irony-setup))
 
 (use-package magit)
 
