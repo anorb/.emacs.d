@@ -177,7 +177,7 @@
                                       ("." . browse-url-default-browser))))
 
 (use-package c-mode
-  :hook (c-mode . lsp))
+  :hook (c-mode . lsp-deferred))
 
 ;;; MELPA packages
 (use-package elfeed
@@ -372,10 +372,6 @@
         web-mode-style-padding 2
         web-mode-engines-alist '(("ctemplate"    . "\\.hbs\\'"))))
 
-;; Requires eslint (npm i -g eslint)
-(use-package tide
-  :delight)
-
 (use-package eldoc
   :delight)
 
@@ -383,9 +379,12 @@
   :delight)
 
 (use-package go-mode
-  :hook ((go-mode . lsp-deferred)
-         (before-save . lsp-format-buffer)
-         (before-save . lsp-organize-imports)))
+  :hook (go-mode . lsp-deferred)
+  :init
+  (defun lsp-go-install-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t)
+    (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
 
 ;; To get the latest version of gopls:
 ;; go get golang.org/x/tools/gopls@latest
