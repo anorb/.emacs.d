@@ -96,8 +96,9 @@
       backup-by-copying t    ; Don't delink hardlinks
       version-control t      ; Use version numbers on backups
       delete-old-versions t  ; Automatically delete excess backups
-      kept-new-versions 20   ; how many of the newest versions to keep
-      kept-old-versions 5)   ; and how many of the old
+      kept-new-versions 6    ; how many of the newest versions to keep
+      kept-old-versions 2    ; and how many of the old
+      create-lockfiles nil)
 
 ;; Ibuffer changes
 (defvar ibuffer-show-empty-filter-groups nil)
@@ -178,6 +179,11 @@
 
 (use-package c-mode
   :hook (c-mode . lsp-deferred))
+
+(use-package url-cache
+  :ensure nil
+  :init
+  (setq url-cache-directory "/tmp/url/cache/"))
 
 ;;; MELPA packages
 (use-package elfeed
