@@ -496,6 +496,10 @@
   ("C-x C-f" . counsel-find-file)
   ("H-i" . counsel-imenu)
   ("H-s" . counsel-ag)
+  ("H-g" . counsel-flycheck)
+  ("C-h o" . counsel-describe-symbol)
+  ("C-h v" . counsel-describe-variable)
+  ("C-h f" . counsel-describe-function)
   :config
   (ivy-set-actions
    'counsel-find-file
