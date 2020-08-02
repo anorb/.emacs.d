@@ -44,10 +44,11 @@
 (defvar tramp-default-method "ssh")
 
 ;; UI stuff
-(menu-bar-mode -1)
-(toggle-scroll-bar -1)
-(tool-bar-mode -1)
+(menu-bar-mode 0)
+(scroll-bar-mode 0)
+(tool-bar-mode 0)
 (column-number-mode 1)
+(tooltip-mode 0)
 (defalias 'yes-or-no-p 'y-or-n-p) ; Make yes/no prompts shorter
 (show-paren-mode 1)               ; Highlight parenthesis & other characters
 (global-hl-line-mode 1)           ; Highlight current line
@@ -194,6 +195,8 @@
   :init
   (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
   (setq-default elfeed-search-filter "@6-week-ago +unread")
+  (setq elfeed-show-entry-switch 'display-buffer)
+  (setq elfeed-search-remain-on-entry t)
   :config
   (defface elfeed-youtube
     '((t :inherit font-lock-constant-face))
@@ -475,7 +478,7 @@
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
 
 (use-package expand-region
-  :bind ("M-@" . er/expand-region))
+  :bind ("H-w" . er/expand-region))
 
 (use-package ivy
   :delight
@@ -591,6 +594,16 @@
 (use-package wordnut)
 
 (use-package speed-type)
+
+(use-package vterm
+  :bind ("C-`" . vterm)
+  :hook
+  (vterm-mode . vterm-hook)
+  :init
+  (setq vterm-kill-buffer-on-exit t)
+  (defun vterm-hook ()
+    (setq-local global-hl-line-mode nil)
+    (setq-local truncate-lines t)))
 
 (use-package hydra
   :defer t
