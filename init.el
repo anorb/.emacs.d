@@ -428,6 +428,8 @@
   (setq spray-margin-top 6))
   ;; (setq spray-margin-left (- (/ (window-body-width) 2) 5))
 
+(use-package mingus)
+
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
   :hook (ledger-mode . flycheck-mode)
@@ -515,7 +517,9 @@
   :bind
   ("C-s" . swiper-isearch))
 
-(use-package smex) ; Used with counsel to get the recenently used commands
+(use-package amx
+  :config
+  (amx-mode 1))
 
 (use-package multiple-cursors
   :bind
