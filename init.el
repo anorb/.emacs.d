@@ -10,14 +10,13 @@
 
 ;;; Code:
 (require 'package)
-(setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 (package-initialize)
 
 ;; Load separately stored custom file
-(setq custom-file "~/.emacs.d/custom.el")
+(setq custom-file "~/.config/emacs/custom.el")
 (if (file-exists-p custom-file)
     (load custom-file))
 
@@ -28,6 +27,32 @@
 
 (setq user-full-name "Austin Norberg"
       user-mail-address "austin@norb.xyz")
+
+(setq frame-title-format "%b - Emacs"
+      icon-title-format "%b - Emacs")
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold 16777216 ; 16mb
+                  gc-cons-percentage 0.1)))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (if (boundp 'after-focus-change-function)
+                (add-function :after after-focus-change-function
+                              (lambda ()
+                                (unless (frame-focus-state)
+                                  (garbage-collect))))
+              (add-hook 'after-focus-change-function 'garbage-collect))))
+
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 ;; Code formatting
 (setq tab-width 4)
@@ -44,11 +69,7 @@
 (defvar tramp-default-method "ssh")
 
 ;; UI stuff
-(menu-bar-mode 0)
-(scroll-bar-mode 0)
-(tool-bar-mode 0)
 (column-number-mode 1)
-(tooltip-mode 0)
 (defalias 'yes-or-no-p 'y-or-n-p) ; Make yes/no prompts shorter
 (show-paren-mode 1)               ; Highlight parenthesis & other characters
 (global-hl-line-mode 1)           ; Highlight current line
@@ -93,7 +114,7 @@
 ;; 	  `((".*" . ,temporary-file-directory)))
 ;; (setq auto-save-file-name-transforms
 ;; 	  `((".*" ,temporary-file-directory t)))
-(setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+(setq backup-directory-alist '(("." . "~/.config/emacs/backup"))
       backup-by-copying t    ; Don't delink hardlinks
       version-control t      ; Use version numbers on backups
       delete-old-versions t  ; Automatically delete excess backups
@@ -128,8 +149,8 @@
                            (name . "^\\*Help\\*$"))))))
 
 ;;; Load misc-defuns for keybinds
-(when (file-exists-p "~/.emacs.d/lisp/misc-defuns.el")
-  (load "~/.emacs.d/lisp/misc-defuns.el"))
+(when (file-exists-p "~/.config/emacs/lisp/misc-defuns.el")
+  (load "~/.config/emacs/lisp/misc-defuns.el"))
 
 ;;; Custom keybinds
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -193,7 +214,7 @@
   ("C-c e" . an/hydra-elfeed/body)
   ("o" . an/elfeed-visit-maybe-externally))
   :init
-  (setq elfeed-db-directory "~/.emacs.d/elfeed/elfeeddb")
+  (setq elfeed-db-directory "~/.config/emacs/elfeed/elfeeddb")
   (setq-default elfeed-search-filter "@6-week-ago +unread")
   (setq elfeed-show-entry-switch 'display-buffer)
   (setq elfeed-search-remain-on-entry t)
@@ -460,7 +481,7 @@
   :delight yas-minor-mode
   :hook (prog-mode . yas-minor-mode)
   :config
-  (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
   (yas-reload-all))
 
 (use-package smartparens
@@ -535,7 +556,7 @@
 
 (use-package modus-operandi-theme
   :init
-  (load-theme 'modus-vivendi))
+  (load-theme 'modus-operandi))
 
 (use-package modus-vivendi-theme)
 
@@ -676,7 +697,7 @@ _d_ display time
 
   (defhydra an/hydra-go-to-file ()
     "Go to"
-    ("e" (find-file "~/.emacs.d/init.el") "init.el" :exit t)
+    ("e" (find-file "~/.config/emacs/init.el") "init.el" :exit t)
     ("b" (find-file "~/.bashrc") ".bashrc" :exit t))
 
   (defhydra an/hydra-dumb-jump (:color blue :columns 3)
@@ -700,8 +721,8 @@ _d_ display time
   :load-path "lisp/org-archive-subtree-hierarchical")
 
 ;;; Load private config
-(when (file-exists-p "~/.emacs.d/lisp/private.el")
-  (load "~/.emacs.d/lisp/private.el"))
+(when (file-exists-p "~/.config/emacs/lisp/private.el")
+  (load "~/.config/emacs/lisp/private.el"))
 
 (provide 'init)
 ;;; init.el ends here

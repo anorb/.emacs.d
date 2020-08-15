@@ -238,9 +238,9 @@ show normally otherwise."
 (defun an/change-desktop ()
   "Interface to easily switch desktops."
   (interactive)
-  (let* ((desktops (remove "." (remove ".." (directory-files "~/.emacs.d/desktops"))))
+  (let* ((desktops (remove "." (remove ".." (directory-files "~/.config/emacs/desktops"))))
          (selection (completing-read "Change desktop: " desktops)))
-    (desktop-read (format "%s%s" "~/.emacs.d/desktops/" selection))))
+    (desktop-read (format "%s%s" "~/.config/emacs/desktops/" selection))))
 
 (defun an/open-in-mpv (link)
   "Open LINK in mpv."
