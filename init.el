@@ -34,7 +34,9 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold 16777216 ; 16mb
-                  gc-cons-percentage 0.1)))
+                  gc-cons-percentage 0.1)
+            (setq file-name-handler-alist file-name-handler-alist-original)
+            (makunbound 'file-name-handler-alist-original)))
 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -207,6 +209,19 @@
   :init
   (setq url-cache-directory "/tmp/url/cache/"))
 
+(use-package winner
+  :init
+  (winner-mode))
+
+(use-package tab-bar
+  :bind
+  (("H-t" . tab-bar-switch-to-tab)
+   ("C-<next>" . tab-bar-switch-to-next-tab)
+   ("C-<prior>" . tab-bar-switch-to-prev-tab))
+  :config
+  (setq tab-bar-close-button-show nil)
+  (setq tab-bar-new-tab-to 'rightmost))
+
 ;;; MELPA packages
 (use-package elfeed
   :bind (("C-x w" . elfeed)
@@ -217,7 +232,6 @@
   (setq elfeed-db-directory "~/.config/emacs/elfeed/elfeeddb")
   (setq-default elfeed-search-filter "@6-week-ago +unread")
   (setq elfeed-show-entry-switch 'display-buffer)
-  (setq elfeed-search-remain-on-entry t)
   :config
   (defface elfeed-youtube
     '((t :inherit font-lock-constant-face))
@@ -248,20 +262,6 @@
   :delight
   :init
   (global-git-gutter-mode 1))
-
-(use-package eyebrowse
-  :init
-  (setq eyebrowse-keymap-prefix (kbd "C-z"))
-  :config
-  (progn
-    (define-key eyebrowse-mode-map (kbd "M-0") 'eyebrowse-switch-to-window-config-0)
-    (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
-    (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
-    (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
-    (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
-    (define-key eyebrowse-mode-map (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
-    (eyebrowse-mode t)
-    (setq eyebrowse-new-workspace t)))
 
 (use-package org
   :defer t
@@ -320,7 +320,7 @@
           ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
           ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
 
-          ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %?\n")))
+          ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))
 
   (setq org-link-abbrev-alist
         '(("ddg"  . "https://duckduckgo.com/?q=%s")
@@ -629,6 +629,8 @@
   (defun vterm-hook ()
     (setq-local global-hl-line-mode nil)
     (setq-local truncate-lines t)))
+
+(use-package elpher)
 
 (use-package hydra
   :defer t
