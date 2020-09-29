@@ -200,10 +200,6 @@
   :init
   (setq browse-url-browser-function '(("file://" . eww-browse-url)
                                       ("." . browse-url-default-browser))))
-
-(use-package c-mode
-  :hook (c-mode . lsp-deferred))
-
 (use-package url-cache
   :ensure nil
   :init
@@ -384,7 +380,7 @@
   (defun setup-tide-mode ()
     (interactive)
     (tide-setup)
-    (flycheck-mode +1)
+    ;; (flycheck-mode +1)
     (eldoc-mode +1)
     (tide-hl-identifier-mode +1)
     (company-mode +1))
@@ -409,24 +405,17 @@
   :delight)
 
 (use-package go-mode
-  :hook (go-mode . lsp-deferred)
   :init
-  (defun lsp-go-install-save-hooks ()
-    (add-hook 'before-save-hook #'lsp-format-buffer t t)
-    (add-hook 'before-save-hook #'lsp-organize-imports t t))
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hooks))
+  (defun go-hooks ()
+    (add-hook 'before-save-hook #'eglot-format-buffer))
+  (add-hook 'go-mode-hook #'go-hooks))
 
 ;; To get the latest version of gopls:
 ;; go get golang.org/x/tools/gopls@latest
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :config
-  (setq lsp-enable-snippet nil
-        lsp-enable-folding nil
-        lsp-eldoc-render-all t))
-
-(use-package company-lsp
-  :commands company-lsp)
+(use-package eglot
+  :hook
+  (go-mode . eglot-ensure)
+  (c-mode . eglot-ensure))
 
 (use-package go-playground
   :init
@@ -453,10 +442,9 @@
 
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
-  :hook (ledger-mode . flycheck-mode)
+  :hook (ledger-mode . ledger-flymake-enable)
   :bind (:map ledger-mode-map ("C-c c" . 'an/hydra-ledger/body))
   :config
-  (use-package flycheck-ledger)
   (add-hook 'ledger-mode-hook (lambda ()
                                 (setq-local tab-always-indent 'complete)
                                 (setq-local completion-ignore-case t)
@@ -522,7 +510,6 @@
   ("C-x C-f" . counsel-find-file)
   ("H-i" . counsel-imenu)
   ("H-s" . counsel-ag)
-  ("H-g" . counsel-flycheck)
   ("C-h o" . counsel-describe-symbol)
   ("C-h v" . counsel-describe-variable)
   ("C-h f" . counsel-describe-function)
@@ -560,14 +547,8 @@
 
 (use-package modus-vivendi-theme)
 
-(use-package flycheck
-  :hook (prog-mode . flycheck-mode)
-  :bind ("C-H-c" . flycheck-buffer)
-  :init
-  (defun disable-elisp-flycheck ()
-    (setq-local flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-  (add-hook 'org-src-mode-hook 'disable-elisp-flycheck)
-  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+(use-package flymake
+  :hook (prog-mode . flymake-mode))
 
 (use-package magit)
 
