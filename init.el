@@ -703,6 +703,53 @@ _d_ display time
   :ensure nil
   :load-path "lisp/org-archive-subtree-hierarchical")
 
+(use-package mu4e
+  :ensure nil
+  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :init
+  (setq mu4e-change-filenames-when-moving t
+        mu4e-headers-skip-duplicates t
+        mu4e-view-show-addresses t
+        mu4e-view-show-images t
+        mu4e-get-mail-command  "mbsync -a"
+        mu4e-attachments-dir "~/Downloads"
+        mu4e-compose-signature-auto-include nil)
+
+  ;; Mail directories
+  (setq mu4e-refile-folder "/Archive"
+        mu4e-sent-folder   "/Sent"
+        mu4e-drafts-folder "/Drafts"
+        mu4e-trash-folder  "/Trash")
+
+  ;; SMTP setup
+  (setq message-send-mail-function   'smtpmail-send-it
+        smtpmail-default-smtp-server "smtp.fastmail.com"
+        smtpmail-smtp-server         "smtp.fastmail.com"
+        smtpmail-smtp-service        465
+        smtpmail-stream-type         'ssl)
+
+  :config
+  (fset 'my-move-to-trash "mTrash")
+  (define-key mu4e-headers-mode-map (kbd "d") 'my-move-to-trash)
+  (define-key mu4e-view-mode-map (kbd "d") 'my-move-to-trash)
+  (setq mu4e-bookmarks
+        '(( :name  "Inbox"
+                   :query "maildir:/Inbox"
+                   :key ?i)
+          ( :name  "Unread messages"
+                   :query "flag:unread AND NOT maildir:/Trash"
+                   :key ?u)
+          ( :name "Today's messages"
+                  :query "date:today..now"
+                  :key ?t)
+          ( :name "Last 7 days"
+                  :query "date:7d..now"
+                  :hide-unread t
+                  :key ?w)
+          ( :name "Messages with images"
+                  :query "mime:image/*"
+                  :key ?p))))
+
 ;;; Load private config
 (when (file-exists-p "~/.config/emacs/lisp/private.el")
   (load "~/.config/emacs/lisp/private.el"))
