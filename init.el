@@ -406,8 +406,10 @@
 
 (use-package go-mode
   :init
+  (setq gofmt-command "goimports")
   (defun go-hooks ()
-    (add-hook 'before-save-hook #'eglot-format-buffer))
+    (add-hook 'before-save-hook #'eglot-format-buffer)
+    (add-hook 'before-save-hook #'gofmt-before-save))
   (add-hook 'go-mode-hook #'go-hooks))
 
 ;; To get the latest version of gopls:
@@ -431,7 +433,9 @@
   :init
   (defvar company-dabbrev-downcase nil)
   (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 1))
+        company-minimum-prefix-length 1
+        company-selection-wrap-around t
+        company-idle-delay 0))
 
 (use-package spray
   :init
