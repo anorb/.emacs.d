@@ -211,55 +211,26 @@
 
 (use-package tab-bar
   :bind
-  (("H-t" . tab-bar-switch-to-tab)
-   ("C-<next>" . tab-bar-switch-to-next-tab)
-   ("C-<prior>" . tab-bar-switch-to-prev-tab))
+  ("H-t" . tab-bar-switch-to-tab)
   :config
   (setq tab-bar-close-button-show nil)
   (setq tab-bar-new-tab-to 'rightmost))
 
+(use-package flymake
+  :hook (prog-mode . flymake-mode))
+
+;; Requires:
+;; aspell
+;; aspell-en
+(use-package flyspell
+  :delight
+  :hook (text-mode . flyspell-mode)
+  :init
+  (setq ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--personal=.config/aspell/.aspell.en.pws")))
+
 ;;; MELPA packages
-(use-package elfeed
-  :bind (("C-x w" . elfeed)
-  :map elfeed-search-mode-map
-  ("C-c e" . an/hydra-elfeed/body)
-  ("o" . an/elfeed-visit-maybe-externally))
-  :init
-  (setq elfeed-db-directory "~/.config/emacs/elfeed/elfeeddb")
-  (setq-default elfeed-search-filter "@6-week-ago +unread")
-  (setq elfeed-show-entry-switch 'display-buffer)
-  :config
-  (defface elfeed-youtube
-    '((t :inherit font-lock-constant-face))
-    "Colors YouTube videos in Elfeed."
-    :group 'elfeed)
-  (defface elfeed-podcast
-    '((t :inherit font-lock-doc-face))
-    "Colors Podcasts in Elfeed."
-    :group 'elfeed)
-  (push '(youtube elfeed-youtube) elfeed-search-face-alist)
-  (push '(podcast elfeed-podcast) elfeed-search-face-alist))
-
-(use-package undo-tree
-  :delight
-  :bind
-  ("<f9>" . 'undo)
-  ("<f10>" . 'redo)
-  :init
-  (global-undo-tree-mode))
-
-(use-package ace-window
-  :bind (("M-o" . ace-window))
-  :config
-  (ace-window-display-mode 1)
-  (setq aw-background nil))
-
-(use-package git-gutter
-  :delight
-  :init
-  (global-git-gutter-mode 1))
-
-(use-package org
+(use-package org-plus-contrib
   :defer t
   :bind
   (("C-c c" . counsel-org-capture)
@@ -327,16 +298,6 @@
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
   (setq org-src-window-setup 'other-window))
 
-(use-package org-drill
-  :init
-  (setq org-drill-add-random-noise-to-intervals-p t
-        org-drill-learn-fraction 0.20
-        org-drill-maximum-duration 20
-        org-drill-leech-method 'warn
-        org-drill-save-buffers-after-drill-sessions-p nil))
-
-(use-package org-drill-table)
-
 (use-package org-super-agenda
   :config
   (org-super-agenda-mode t)
@@ -364,28 +325,45 @@
              '((:discard (:not (:scheduled today :scheduled past)))
                (:auto-parent t))))))))
 
-(use-package js2-mode
+(use-package elfeed
+  :bind (("C-x w" . elfeed)
+  :map elfeed-search-mode-map
+  ("C-c e" . an/hydra-elfeed/body)
+  ("o" . an/elfeed-visit-maybe-externally))
+  :init
+  (setq elfeed-db-directory "~/.config/emacs/elfeed/elfeeddb")
+  (setq-default elfeed-search-filter "@6-week-ago +unread")
+  (setq elfeed-show-entry-switch 'display-buffer)
   :config
-  ;; Turn off js2 mode errors & warnings
-  (setq js2-mode-show-parse-errors nil
-        js2-mode-show-strict-warnings nil
-        js2-basic-offset 2)
-  (js2-imenu-extras-mode))
+  (defface elfeed-youtube
+    '((t :inherit font-lock-constant-face))
+    "Colors YouTube videos in Elfeed."
+    :group 'elfeed)
+  (defface elfeed-podcast
+    '((t :inherit font-lock-doc-face))
+    "Colors Podcasts in Elfeed."
+    :group 'elfeed)
+  (push '(youtube elfeed-youtube) elfeed-search-face-alist)
+  (push '(podcast elfeed-podcast) elfeed-search-face-alist))
 
-(use-package rjsx-mode
-  :mode "\\.js\\'")
+(use-package undo-tree
+  :delight
+  :bind
+  ("<f9>" . 'undo)
+  ("<f10>" . 'redo)
+  :init
+  (global-undo-tree-mode))
 
-(use-package tide
+(use-package ace-window
+  :bind (("M-o" . ace-window))
   :config
-  (defun setup-tide-mode ()
-    (interactive)
-    (tide-setup)
-    ;; (flycheck-mode +1)
-    (eldoc-mode +1)
-    (tide-hl-identifier-mode +1)
-    (company-mode +1))
-  (defvar company-tooltip-align-annotations t)   ; aligns annotation to the right hand side
-  (add-hook 'rjsx-mode-hook #'setup-tide-mode))
+  (ace-window-display-mode 1)
+  (setq aw-background nil))
+
+(use-package git-gutter
+  :delight
+  :init
+  (global-git-gutter-mode 1))
 
 (use-package web-mode
   :mode ("\\.hbs\\'" "\\.htm\\'" "\\.html\\'")
@@ -401,8 +379,12 @@
 (use-package eldoc
   :delight)
 
-(use-package indent-guide
-  :delight)
+;; To get the latest version of gopls:
+;; go get golang.org/x/tools/gopls@latest
+(use-package eglot
+  :hook
+  (go-mode . eglot-ensure)
+  (c-mode . eglot-ensure))
 
 (use-package go-mode
   :init
@@ -412,20 +394,9 @@
     (add-hook 'before-save-hook #'gofmt-before-save))
   (add-hook 'go-mode-hook #'go-hooks))
 
-;; To get the latest version of gopls:
-;; go get golang.org/x/tools/gopls@latest
-(use-package eglot
-  :hook
-  (go-mode . eglot-ensure)
-  (c-mode . eglot-ensure))
-
 (use-package go-playground
   :init
   (setq go-playground-basedir "~/Projects/go/src/playground"))
-
-(use-package dired-subtree
-  :bind (:map dired-mode-map
-              ("TAB" . dired-subtree-cycle)))
 
 (use-package company
   :delight
@@ -436,13 +407,6 @@
         company-minimum-prefix-length 1
         company-selection-wrap-around t
         company-idle-delay 0))
-
-(use-package spray
-  :init
-  (setq spray-margin-top 6))
-  ;; (setq spray-margin-left (- (/ (window-body-width) 2) 5))
-
-(use-package mingus)
 
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
@@ -503,10 +467,9 @@
         ivy-display-style 'fancy
         ivy-initial-inputs-alist nil))
 
-(use-package ivy-rich
-  :config
-  (ivy-rich-mode 1)
-  (setq ivy-rich-path-style 'abbrev))
+(use-package swiper
+  :bind
+  ("C-s" . swiper-isearch))
 
 (use-package counsel
   :bind
@@ -525,13 +488,19 @@
   ;; Couldn't find a better way to set initial input for ivy so we'll try this
   (add-to-list 'ivy-initial-inputs-alist '(counsel-M-x . "")))
 
-(use-package swiper
-  :bind
-  ("C-s" . swiper-isearch))
-
 (use-package amx
   :config
   (amx-mode 1))
+
+(use-package ivy-rich
+  :config
+  (ivy-rich-mode 1)
+  (setq ivy-rich-path-style 'abbrev))
+
+(use-package flyspell-correct-ivy
+    :bind ("C-M-;" . flyspell-correct-wrapper)
+    :init
+    (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
 (use-package multiple-cursors
   :bind
@@ -539,20 +508,11 @@
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this))
 
-(use-package dumb-jump
-  :bind ("C-c j" . an/hydra-dumb-jump/body)
-  :init
-  (setq dumb-jump-selector 'ivy)
-  (setq dumb-jump-default-project "~/Projects"))
-
 (use-package modus-operandi-theme
   :init
   (load-theme 'modus-operandi))
 
 (use-package modus-vivendi-theme)
-
-(use-package flymake
-  :hook (prog-mode . flymake-mode))
 
 (use-package magit)
 
@@ -565,8 +525,6 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package move-dup)
-
 (use-package avy
   :bind ("C-r" . avy-goto-char-timer))
 
@@ -575,22 +533,9 @@
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   (setq nov-text-width 80))
 
-(use-package ag)
-(use-package delight) ; This is for using :delight with use-package as an optional dependency
 (use-package ivy-pass)
-(use-package rainbow-mode)
-(use-package lua-mode)
-
-
-;; Requires:
-;; aspell
-;; aspell-en
-(use-package flyspell
-  :delight
-  :hook (text-mode . flyspell-mode)
-  :init
-  (setq ispell-program-name "aspell"
-        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--personal=.config/aspell/.aspell.en.pws")))
+(use-package restclient)
+(use-package elpher)
 
 ;; Requires:
 ;; wordnet
@@ -603,8 +548,6 @@
 ;; wordnet
 (use-package wordnut)
 
-(use-package speed-type)
-
 (use-package vterm
   :bind ("C-`" . vterm)
   :hook
@@ -614,8 +557,6 @@
   (defun vterm-hook ()
     (setq-local global-hl-line-mode nil)
     (setq-local truncate-lines t)))
-
-(use-package elpher)
 
 (use-package hydra
   :defer t
