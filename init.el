@@ -211,13 +211,27 @@
 
 (use-package tab-bar
   :bind
-  ("H-t" . tab-bar-switch-to-tab)
+  ("H-t" . an/hydra-window-management/body)
+  ;; monkey-with-hammer.png
+  ("M-1" .  (lambda () (interactive) (tab-bar-select-tab 1)))
+  ("M-2" .  (lambda () (interactive) (tab-bar-select-tab 2)))
+  ("M-3" .  (lambda () (interactive) (tab-bar-select-tab 3)))
+  ("M-4" .  (lambda () (interactive) (tab-bar-select-tab 4)))
+  ("M-5" .  (lambda () (interactive) (tab-bar-select-tab 5)))
+  ("M-6" .  (lambda () (interactive) (tab-bar-select-tab 6)))
+  ("M-7" .  (lambda () (interactive) (tab-bar-select-tab 7)))
+  ("M-8" .  (lambda () (interactive) (tab-bar-select-tab 8)))
+  ("M-9" .  (lambda () (interactive) (tab-bar-select-tab 9)))
   :config
   (setq tab-bar-close-button-show nil)
   (setq tab-bar-new-tab-to 'rightmost))
 
 (use-package flymake
-  :hook (prog-mode . flymake-mode))
+  :hook (prog-mode . flymake-mode)
+  :bind (:map flymake-mode-map
+              ("H-k" . an/hydra-flymake/body))
+  :init
+  (setq flymake-suppress-zero-counters t))
 
 ;; Requires:
 ;; aspell
@@ -229,7 +243,13 @@
   (setq ispell-program-name "aspell"
         ispell-extra-args '("--sug-mode=ultra" "--lang=en_US" "--personal=.config/aspell/.aspell.en.pws")))
 
+(use-package time
+  :init
+  (setq display-time-24hr-format t))
+
 ;;; MELPA packages
+(use-package delight)
+
 (use-package org-plus-contrib
   :defer t
   :bind
@@ -402,7 +422,7 @@
   :delight
   :hook (prog-mode . company-mode)
   :init
-  (defvar company-dabbrev-downcase nil)
+  (setq completion-ignore-case t)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 1
         company-selection-wrap-around t
@@ -455,6 +475,9 @@
   :config
   (require 'smartparens-config)
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
+
+(use-package hl-todo
+  :hook ((prog-mode . hl-todo-mode)))
 
 (use-package expand-region
   :bind ("H-w" . er/expand-region))
@@ -636,7 +659,38 @@ _d_ display time
     ("x" dumb-jump-go-prefer-external-other-window "Go external other window")
     ("i" dumb-jump-go-prompt "Prompt")
     ("l" dumb-jump-quick-look "Quick look")
-    ("b" dumb-jump-back "Back")))
+    ("b" dumb-jump-back "Back"))
+
+  (defhydra an/hydra-flymake ()
+    "Flymake"
+    ("n" flymake-goto-next-error "Next error")
+    ("p" flymake-goto-prev-error "Previous error")
+    ("d" flymake-show-diagnostics-buffer "Show diagnostic buffer")
+    ("s" flymake-start "Start")
+    ("q" nil "Quit"))
+
+  (defhydra an/hydra-window-management (:hint nil)
+    "
+^tab-bar^           ^winner^
+-------------------------------------
+_t_ switch tabs     _U_: undo
+_n_ new tab         _R_: redo
+_r_ rename tab
+_m_ move tab
+_k_ close tab
+^ ^
+"
+    ;; tab-bar
+    ("t" tab-bar-switch-to-tab :exit t)
+    ("n" tab-bar-new-tab)
+    ("r" tab-bar-rename-tab)
+    ("m" tab-bar-move-tab)
+    ("k" tab-bar-close-tab)
+    ;; winner
+    ("U" winner-undo)
+    ("R" winner-redo)
+    ;; Misc
+    ("q" nil "cancel")))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
