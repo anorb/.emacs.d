@@ -270,6 +270,7 @@
   (setq org-todo-keywords '((type "TODO" "|" "DONE")))
   (setq org-hide-leading-stars t)
   (setq org-ellipsis "⤵")
+  (setq org-duration-format 'h:mm)
 
   (setq org-directory "~/org/")
   (load-library "find-lisp")
@@ -599,6 +600,7 @@ _j_ goto current clock
 _l_ goto last clock
 _t_ toggle mode line total
 _d_ display time
+_r_ clock report
 ^ ^
 "
     ;; Clock
@@ -608,6 +610,7 @@ _d_ display time
     ("l" org-clock-in-last :exit t)
     ("t" toggle-org-clock-mode-line-total-setting)
     ("d" org-clock-display)
+    ("r" org-clock-report :exit t)
     ;; Capture
     ("c" counsel-org-capture)
     ("L" org-capture-goto-last-stored)
@@ -674,14 +677,18 @@ _d_ display time
     "
 ^tab-bar^           ^winner^
 -------------------------------------
-_t_ switch tabs     _U_: undo
-_n_ new tab         _R_: redo
+_f_ next tab        _U_: undo
+_p_ prior tab       _R_: redo
+_t_ switch tabs
+_n_ new tab
 _r_ rename tab
 _m_ move tab
 _k_ close tab
 ^ ^
 "
     ;; tab-bar
+    ("f" tab-bar-switch-to-next-tab)
+    ("p" tab-bar-switch-to-prev-tab)
     ("t" tab-bar-switch-to-tab :exit t)
     ("n" tab-bar-new-tab)
     ("r" tab-bar-rename-tab)
