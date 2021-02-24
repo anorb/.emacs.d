@@ -404,7 +404,8 @@
 (use-package eglot
   :hook
   (go-mode . eglot-ensure)
-  (c-mode . eglot-ensure))
+  (c-mode . eglot-ensure)
+  :bind (:map eglot-mode-map ("H-l" . 'an/hydra-eglot/body)))
 
 (use-package go-mode
   :init
@@ -661,7 +662,7 @@ _d_ display time
     ("l" dumb-jump-quick-look "Quick look")
     ("b" dumb-jump-back "Back"))
 
-  (defhydra an/hydra-flymake ()
+  (defhydra an/hydra-flymake (:color blue :columns 3)
     "Flymake"
     ("n" flymake-goto-next-error "Next error")
     ("p" flymake-goto-prev-error "Previous error")
@@ -690,7 +691,13 @@ _k_ close tab
     ("U" winner-undo)
     ("R" winner-redo)
     ;; Misc
-    ("q" nil "cancel")))
+    ("q" nil "cancel"))
+
+  (defhydra an/hydra-eglot (:color blue :columns 3)
+  "Eglot"
+  ("x" eglot "eglot" :exit t)
+  ("r" eglot-rename "rename" :exit t)
+  ("f" eglot-format "format buffer" :exit t)))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
