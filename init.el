@@ -13,8 +13,6 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
-(package-initialize)
-
 ;; Load separately stored custom file
 (setq custom-file "~/.config/emacs/custom.el")
 (if (file-exists-p custom-file)
@@ -24,6 +22,14 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+;; use-package settings
+(defvar use-package-always-ensure t)
+(defvar use-package-enable-imenu-support t)
+
+;; This is required to make flymake work correctly in this file
+(eval-when-compile
+  (package-initialize))
 
 (setq user-full-name "Austin Norberg"
       user-mail-address "austin@norb.xyz")
@@ -63,10 +69,6 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq-default indent-tabs-mode nil)
 
-;; GPG stuff
-(setq epg-gpg-program "gpg2")
-(setq epg-gpg-home-directory "~/.gnupg")
-
 ;; Tramp stuff
 (defvar tramp-default-method "ssh")
 
@@ -82,12 +84,6 @@
 ;; Going to a new line at the end of a buffer creates new line
 (setq next-line-add-newlines t)
 
-;; Save buffers & window config on exit
-(desktop-save-mode 1)
-
-(setq desktop-save t)
-(setq ad-redefinition-action 'accept)
-
 (defvar an/desktop-save nil
   "Should Emacs save desktop when exiting?")
 
@@ -101,61 +97,16 @@
 
 (setq delete-by-moving-to-trash t
       sentence-end-double-space nil
-      display-time-24hr-format t
-      initial-scratch-message nil
-      eshell-hist-ignoredups t)
+      initial-scratch-message nil)
 
 ;; Kills dired buffers on emacs close
 (add-hook 'kill-emacs-hook #'an/kill-dired-buffers)
-
-;; ensure all package with use-package
-(defvar use-package-always-ensure t)
-
-;; Backups and autosaves to tmp
-;; (setq backup-directory-alist
-;; 	  `((".*" . ,temporary-file-directory)))
-;; (setq auto-save-file-name-transforms
-;; 	  `((".*" ,temporary-file-directory t)))
-(setq backup-directory-alist '(("." . "~/.config/emacs/backup"))
-      backup-by-copying t    ; Don't delink hardlinks
-      version-control t      ; Use version numbers on backups
-      delete-old-versions t  ; Automatically delete excess backups
-      kept-new-versions 6    ; how many of the newest versions to keep
-      kept-old-versions 2    ; and how many of the old
-      create-lockfiles nil)
-
-;; Ibuffer changes
-(defvar ibuffer-show-empty-filter-groups nil)
-(add-hook 'ibuffer-mode-hook
-	  (lambda ()
-	    (ibuffer-auto-mode 1)
-	    (ibuffer-switch-to-saved-filter-groups "default")))
-
-(defvar ibuffer-saved-filter-groups
-	'(("default"
-		 ("dired" (mode . dired-mode))
-		 ("org" (name . "^.*org$"))
-		 ;; ("web" (or (mode . web-mode) (mode . js2-mode)))
-		 ("shell" (or (mode . eshell-mode)
-                              (mode . shell-mode)))
-		 ("programming" (or
-                                 (mode . sh-mode)
-                                 (mode . lisp-mode)
-                                 (mode . emacs-lisp-mode)
-                                 (mode . go-mode)
-                                 (mode . js2-mode)
-                                 (mode . rjsx-mode)))
-		 ("emacs" (or
-			   (name . "^\\*scratch\\*$")
-			   (name . "^\\*Messages\\*$")
-                           (name . "^\\*Help\\*$"))))))
 
 ;;; Load misc-defuns for keybinds
 (when (file-exists-p "~/.config/emacs/lisp/misc-defuns.el")
   (load "~/.config/emacs/lisp/misc-defuns.el"))
 
 ;;; Custom keybinds
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key [f5] 'revert-buffer)
 
 (global-set-key (kbd "C-v") 'an/scroll-up-half)
@@ -171,17 +122,56 @@
 (global-set-key (kbd "C-x 2") 'an/split-window-below-focus)
 (global-set-key (kbd "C-x 3") 'an/split-window-right-focus)
 
-(global-set-key (kbd "H-e") 'eshell)
-
 (global-set-key (kbd "C-x j") 'an/change-desktop)
 
 (global-set-key (kbd "C-x d") 'dired)
 (global-set-key (kbd "C-x C-d") 'dired-jump)
 (global-set-key (kbd "C-x M-d") 'dired-other-window)
 
-(global-set-key (kbd "C-x C-c") nil) ;; prevent save-buffers-kill-terminal keybind
+(unbind-key "C-x C-c") ;; prevent save-buffers-kill-terminal keybind
+(unbind-key "C-z") ;; prevent suspend
 
 ;;; Built in packages
+(use-package emacs
+  :config
+  (setq make-backup-files nil  ; Prevent backups from being created
+        backup-directory-alist '(("." . "~/.config/emacs/backup"))
+        backup-by-copying t    ; Don't delink hardlinks
+        version-control t      ; Use version numbers on backups
+        delete-old-versions t  ; Automatically delete excess backups
+        kept-new-versions 6    ; how many of the newest versions to keep
+        kept-old-versions 2)   ; and how many of the old
+  (setq auto-save-default t)
+  (setq create-lockfiles nil))
+
+(use-package ibuffer
+  :bind (("C-x C-b" . ibuffer))
+  :init
+  ;; Ibuffer changes
+  (add-hook 'ibuffer-mode-hook
+	    (lambda ()
+	      (ibuffer-auto-mode 1)
+	      (ibuffer-switch-to-saved-filter-groups "default")))
+
+  (setq-default ibuffer-saved-filter-groups
+    '(("default"
+       ("dired" (mode . dired-mode))
+       ("org" (name . "^.*org$"))
+       ;; ("web" (or (mode . web-mode) (mode . js2-mode)))
+       ("shell" (or (mode . eshell-mode)
+                    (mode . shell-mode)))
+       ("programming" (or
+                       (mode . sh-mode)
+                       (mode . lisp-mode)
+                       (mode . emacs-lisp-mode)
+                       (mode . go-mode)
+                       (mode . js2-mode)
+                       (mode . rjsx-mode)))
+       ("emacs" (or
+		 (name . "^\\*scratch\\*$")
+		 (name . "^\\*Messages\\*$")
+                 (name . "^\\*Help\\*$")))))))
+
 (use-package autorevert
   :delight auto-revert-mode
   :init
@@ -247,10 +237,34 @@
   :init
   (setq display-time-24hr-format t))
 
+;; GPG stuff
+(use-package epg-config
+  :ensure nil
+  :init
+  (setq epg-gpg-program "gpg2")
+  (setq epg-gpg-home-directory "~/.gnupg"))
+
+(use-package eshell
+  :bind (("H-e" . eshell)))
+
+(use-package desktop
+  :init
+  ;; Save buffers & window config on exit
+  (desktop-save-mode 1)
+  (setq desktop-save t))
+
+(use-package advice
+  :ensure nil
+  :init
+  (setq ad-redefinition-action 'accept))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
+;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package delight)
 
-(use-package org-plus-contrib
+(use-package org
+  :ensure org-plus-contrib
   :defer t
   :bind
   (("C-c c" . counsel-org-capture)
@@ -260,55 +274,31 @@
    ("H-u" . counsel-org-goto-all))
   :custom (org-modules '(org-tempo org-habit org-checklist))
   :init
+  (setq org-directory "~/org/")
+  (load-library "find-lisp")
+  (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
+  (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((shell . t)))
+
   (add-hook 'org-mode-hook #'(lambda ()
 			       (visual-line-mode)
 			       (org-indent-mode)))
 
-  (defvar org-capture-bookmark nil)
   (setq org-log-done t)
   (setq org-log-into-drawer t)
   (setq org-todo-keywords '((type "TODO" "|" "DONE")))
   (setq org-hide-leading-stars t)
   (setq org-ellipsis "⤵")
-  (setq org-duration-format 'h:mm)
-
-  (setq org-directory "~/org/")
-  (load-library "find-lisp")
-  (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
-
-  (setq org-habit-show-all-today t)
-  (setq org-habit-preceding-days 21)
-  (setq org-habit-following-days 7)
-  (setq org-habit-graph-column 50)
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
   (setq org-refile-use-outline-path 'file)
   (setq org-outline-path-complete-in-steps nil)
   (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-clock-display-default-range 'untilnow)
-  (setq org-clock-mode-line-total 'today)
 
   (setq org-catch-invisible-edits 'show-and-error)
   (setq org-cycle-separator-lines 0)
-
-  (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
-
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((shell . t)))
-
-  (setq org-capture-templates
-        `(("p" "Personal templates")
-          ("pt" "tech task"     entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")     "* TODO %?\n")
-          ("pn" "non-tech task" entry (file+headline ,(concat org-directory "personal.org") "Non-tech tasks") "* TODO %?\n")
-          ("pr" "research"      entry (file+headline ,(concat org-directory "personal.org") "Research notes") "* TODO %?\n")
-          ("ps" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
-
-          ("f" "finance task" entry (file+headline ,(concat org-directory "finance.org") "Tasks") "* TODO %?\n")
-          ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
-          ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
-
-          ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))
 
   (setq org-link-abbrev-alist
         '(("ddg"  . "https://duckduckgo.com/?q=%s")
@@ -317,7 +307,43 @@
   (org-link-set-parameters "eww" :follow (lambda (path) (eww path)))
   (setq org-default-notes-file (concat org-directory "personal.org"))
   (setq org-archive-location (concat org-directory "archive/%s_archive::"))
-  (setq org-src-window-setup 'other-window))
+  (setq org-src-window-setup 'other-window)
+
+  (use-package org-duration
+    :ensure nil
+    :init
+    (setq org-duration-format 'h:mm))
+
+  (use-package org-habit
+    :ensure nil
+    :init
+    (setq org-habit-show-all-today t)
+    (setq org-habit-preceding-days 21)
+    (setq org-habit-following-days 7)
+    (setq org-habit-graph-column 50))
+
+  (use-package org-clock
+    :ensure nil
+    :init
+    (setq org-clock-display-default-range 'untilnow)
+    (setq org-clock-mode-line-total 'today))
+
+  (use-package org-capture
+    :ensure nil
+    :init
+    (setq org-capture-bookmark nil)
+    (setq org-capture-templates
+          `(("p" "Personal templates")
+            ("pt" "tech task"     entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")     "* TODO %?\n")
+            ("pn" "non-tech task" entry (file+headline ,(concat org-directory "personal.org") "Non-tech tasks") "* TODO %?\n")
+            ("pr" "research"      entry (file+headline ,(concat org-directory "personal.org") "Research notes") "* TODO %?\n")
+            ("ps" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
+
+            ("f" "finance task" entry (file+headline ,(concat org-directory "finance.org") "Tasks") "* TODO %?\n")
+            ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
+            ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
+
+            ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))))
 
 (use-package org-super-agenda
   :config
@@ -725,7 +751,7 @@ _k_ close tab
         mu4e-view-show-addresses t
         mu4e-view-show-images t
         mu4e-get-mail-command  "mbsync -a"
-        mu4e-attachments-dir "~/Downloads"
+        mu4e-attachment-dir "~/Downloads"
         mu4e-compose-signature-auto-include nil)
 
   ;; Mail directories
