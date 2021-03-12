@@ -505,6 +505,8 @@
   (sp-local-pair 'prog-mode "{" nil :post-handlers '(("||\n[i]" "RET"))))
 
 (use-package hl-todo
+  :bind (:map hl-todo-mode-map
+              ("C-c C-t" . an/hydra-hl-todo/body))
   :hook ((prog-mode . hl-todo-mode)))
 
 (use-package expand-region
@@ -730,7 +732,14 @@ _k_ close tab
   "Eglot"
   ("x" eglot "eglot" :exit t)
   ("r" eglot-rename "rename" :exit t)
-  ("f" eglot-format "format buffer" :exit t)))
+  ("f" eglot-format "format buffer" :exit t))
+
+  (defhydra an/hydra-hl-todo (:color blue :columns 2)
+    "hl-todo"
+    ("n" hl-todo-next "next")
+    ("p" hl-todo-previous "previous")
+    ("o" hl-todo-occur "occur" :exit t)
+    ("i" hl-todo-insert "insert" :exit t)))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
