@@ -407,10 +407,11 @@
   (ace-window-display-mode 1)
   (setq aw-background nil))
 
-(use-package git-gutter
+(use-package diff-hl
   :delight
   :init
-  (global-git-gutter-mode 1))
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode))
 
 (use-package web-mode
   :mode ("\\.hbs\\'" "\\.htm\\'" "\\.html\\'")
