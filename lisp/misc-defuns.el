@@ -195,7 +195,7 @@ If SYMBOLS is t, symbols will be added to the password."
   (let* ((entry (elfeed-search-selected t))
          (tags (elfeed-entry-tags entry))
          (url (cond ((member 'podcast tags) (an/elfeed-enclosure-yank))
-                    ((member 'youtube tags) (an/elfeed-link-yank)))))
+                    ((member 'video tags) (an/elfeed-link-yank)))))
     (message "Downloading media from: %s" url)
     (start-process "elfeed-youtube-dl" nil "youtube-dl" url "-o" "~/Downloads/%(title)s.%(ext)s")))
 

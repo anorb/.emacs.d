@@ -382,15 +382,15 @@
   (setq-default elfeed-search-filter "@6-week-ago +unread")
   (setq elfeed-show-entry-switch 'display-buffer)
   :config
-  (defface elfeed-youtube
+  (defface elfeed-video
     '((t :inherit font-lock-constant-face))
-    "Colors YouTube videos in Elfeed."
+    "Colors Videos in Elfeed."
     :group 'elfeed)
   (defface elfeed-podcast
     '((t :inherit font-lock-doc-face))
     "Colors Podcasts in Elfeed."
     :group 'elfeed)
-  (push '(youtube elfeed-youtube) elfeed-search-face-alist)
+  (push '(video elfeed-video) elfeed-search-face-alist)
   (push '(podcast elfeed-podcast) elfeed-search-face-alist))
 
 (use-package undo-tree
@@ -562,11 +562,12 @@
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this))
 
-(use-package modus-operandi-theme
+(use-package modus-themes
+  :bind ("<f6>" . modus-themes-toggle)
   :init
-  (load-theme 'modus-operandi))
-
-(use-package modus-vivendi-theme)
+  (modus-themes-load-themes)
+  :config
+  (modus-themes-load-operandi))
 
 (use-package magit)
 
