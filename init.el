@@ -449,13 +449,16 @@
 
 (use-package company
   :delight
+  :bind (("C-c ." . company-complete)
+         ("C-c C-." . company-complete)
+         ("C-c C-s" . company-yasnippet))
   :hook (prog-mode . company-mode)
   :init
   (setq completion-ignore-case t)
   (setq company-tooltip-align-annotations t
         company-minimum-prefix-length 1
         company-selection-wrap-around t
-        company-idle-delay 0))
+        company-idle-delay 1))
 
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
