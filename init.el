@@ -286,6 +286,14 @@
 			       (visual-line-mode)
 			       (org-indent-mode)))
 
+  (setq org-agenda-custom-commands
+      '(("d" "Day agenda"
+         ((agenda ""
+                  ((org-agenda-span 1)
+                   ;; (org-agenda-overriding-header "Today:")
+                   (org-agenda-sorting-strategy '(habit-up scheduled-down category-keep)))))
+         ((org-agenda-compact-blocks t)))))
+
   (setq org-log-done t)
   (setq org-log-into-drawer t)
   (setq org-todo-keywords '((type "TODO" "|" "DONE")))
@@ -344,33 +352,6 @@
             ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
 
             ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))))
-
-(use-package org-super-agenda
-  :config
-  (org-super-agenda-mode t)
-  (setq org-super-agenda-groups '((:name "Schedule" :time-grid t)
-                                  (:name "Habits" :habit t)
-                                  (:name "Recurring" :tag "recurring")
-                                  (:discard  (:tag "drill"))
-                                  (:name "Today" :scheduled today)
-                                  (:name "Due today" :deadline today)
-                                  (:name "Overdue" :scheduled past)
-                                  (:name "Due soon" :deadline future)
-                                  (:name "Dates" :category "people")))
-
-  (setq org-agenda-custom-commands
-        '(("t" "All TODOs groups by category" todo ""
-           ((org-super-agenda-groups
-             '((:discard (:and (:not (:todo "TODO")) :category "people" :tag "recurring"))
-               (:auto-category t)))))
-          ("b" "View reading list" todo ""
-           ((org-super-agenda-groups
-             '((:discard (:not (:and (:not (:todo ("TODO")) :category "books"))))
-               (:auto-parent t)))))
-          ("f" "Flash cards" tags "drill"
-           ((org-super-agenda-groups
-             '((:discard (:not (:scheduled today :scheduled past)))
-               (:auto-parent t))))))))
 
 (use-package elfeed
   :bind (("C-x w" . elfeed)
