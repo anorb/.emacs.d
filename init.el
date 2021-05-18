@@ -292,7 +292,14 @@
                   ((org-agenda-span 1)
                    ;; (org-agenda-overriding-header "Today:")
                    (org-agenda-sorting-strategy '(habit-up scheduled-down category-keep)))))
-         ((org-agenda-compact-blocks t)))))
+         ((org-agenda-compact-blocks t)))
+        ("b" "View reading list"
+         ((todo "READINGLIST")
+          (todo "STARTED")
+          (todo "NEEDSREVIEW")
+          (todo "READ"))
+         ((org-agenda-files '("~/org/books.org"))))
+        ("A" "all items set with todo" todo "TODO")))
 
   (setq org-log-done t)
   (setq org-log-into-drawer t)
