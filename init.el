@@ -290,8 +290,7 @@
       '(("d" "Day agenda"
          ((agenda ""
                   ((org-agenda-span 1)
-                   ;; (org-agenda-overriding-header "Today:")
-                   (org-agenda-sorting-strategy '(habit-up scheduled-down category-keep)))))
+                   (org-agenda-sorting-strategy '(habit-up time-up scheduled-down category-keep)))))
          ((org-agenda-compact-blocks t)))
         ("b" "View reading list"
          ((todo "READINGLIST")
@@ -306,6 +305,7 @@
   (setq org-todo-keywords '((type "TODO" "|" "DONE")))
   (setq org-hide-leading-stars t)
   (setq org-ellipsis "⤵")
+  (setq org-startup-folded t)
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
   (setq org-refile-use-outline-path 'file)
