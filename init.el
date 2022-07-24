@@ -113,6 +113,8 @@
 (global-set-key (kbd "C-w") 'an/xah-cut-line-or-region)
 (global-set-key (kbd "M-w") 'an/xah-copy-line-or-region)
 
+(global-set-key [f7] 'an/frame-recenter)
+
 (global-set-key (kbd "<C-backspace>") 'an/backward-delete-word)
 (global-set-key (kbd "M-DEL") 'an/backward-delete-word)
 (global-set-key (kbd "M-d") 'an/delete-word)

@@ -296,6 +296,16 @@ show normally otherwise."
   (while (re-search-forward "‘" nil t)
     (replace-match "'")))
 
+; Courtesy of https://christiantietze.de/posts/2022/04/emacs-center-window-current-monitor-simplified/
+(defun an/frame-recenter (&optional frame)
+  "Center FRAME on the screen.
+FRAME can be a frame name, a terminal name, or a frame.
+If FRAME is omitted or nil, use currently selected frame."
+  (interactive)
+  (unless (eq 'maximised (frame-parameter nil 'fullscreen))
+    (modify-frame-parameters
+     frame '((user-position . t) (top . 0.5) (left . 0.5)))))
+
 ;; Org clock mode line functionality from...
 ;; http://mbork.pl/2019-05-11_Toggling_modeline_clock_display
 (setq org-clock-mode-line-total-settings
