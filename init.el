@@ -11,7 +11,6 @@
 ;;; Code:
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
 ;; Load separately stored custom file
 (setq custom-file "~/.config/emacs/custom.el")
@@ -27,9 +26,7 @@
 (defvar use-package-always-ensure t)
 (defvar use-package-enable-imenu-support t)
 
-;; This is required to make flymake work correctly in this file
-(eval-when-compile
-  (package-initialize))
+(package-initialize)
 
 (setq user-full-name "Austin Norberg"
       user-mail-address "austin@norb.xyz")
@@ -77,6 +74,7 @@
 (defalias 'yes-or-no-p 'y-or-n-p) ; Make yes/no prompts shorter
 (show-paren-mode 1)               ; Highlight parenthesis & other characters
 (global-hl-line-mode 1)           ; Highlight current line
+(set-frame-font "DejaVu Sans Mono-10" t t)
 
 ;; Typing with region selected will delete region
 (delete-selection-mode)
@@ -142,7 +140,10 @@
         kept-new-versions 6    ; how many of the newest versions to keep
         kept-old-versions 2)   ; and how many of the old
   (setq auto-save-default t)
-  (setq create-lockfiles nil))
+  (setq create-lockfiles nil)
+
+  (load-theme 'modus-operandi)
+  (define-key global-map (kbd "<f6>") #'modus-themes-toggle))
 
 (use-package ibuffer
   :bind (("C-x C-b" . ibuffer))
@@ -264,7 +265,6 @@
 (use-package delight)
 
 (use-package org
-  :ensure org-plus-contrib
   :defer t
   :bind
   (("C-c c" . counsel-org-capture)
@@ -387,7 +387,8 @@
   ("<f9>" . 'undo)
   ("<f10>" . 'redo)
   :init
-  (global-undo-tree-mode))
+  (global-undo-tree-mode)
+  (setq undo-tree-auto-save-history nil))
 
 (use-package ace-window
   :bind (("M-o" . ace-window))
@@ -552,13 +553,6 @@
   ("C-S-c C-S-c" . mc/edit-lines)
   ("C->" . mc/mark-next-like-this)
   ("C-<" . mc/mark-previous-like-this))
-
-(use-package modus-themes
-  :bind ("<f6>" . modus-themes-toggle)
-  :init
-  (modus-themes-load-themes)
-  :config
-  (modus-themes-load-operandi))
 
 (use-package magit)
 
