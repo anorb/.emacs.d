@@ -428,10 +428,10 @@
 
 (use-package go-mode
   :init
-  (setq gofmt-command "goimports")
+  (defun +eglot-organize-imports() (call-interactively 'eglot-code-action-organize-imports))
   (defun go-hooks ()
-    (add-hook 'before-save-hook #'eglot-format-buffer)
-    (add-hook 'before-save-hook #'gofmt-before-save))
+    (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
+    (add-hook 'before-save-hook #'+eglot-organize-imports))
   (add-hook 'go-mode-hook #'go-hooks))
 
 (use-package go-playground

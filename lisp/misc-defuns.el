@@ -199,11 +199,6 @@ If SYMBOLS is t, symbols will be added to the password."
     (message "Downloading media from: %s" url)
     (start-process "elfeed-youtube-dl" nil "youtube-dl" url "-o" "~/Downloads/%(title)s.%(ext)s")))
 
-(defun an/elfeed-open-with-epiphany ()
-  "Open link in Epiphany."
-  (interactive)
-  (start-process "epiphany" nil "epiphany" (an/elfeed-link-yank)))
-
 ;; these elfeed functions courtesy of https://github.com/skeeto/elfeed/issues/267
 (defun an/elfeed-play-with-mpv ()
   "Play entry link with mpv."
