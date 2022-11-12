@@ -419,7 +419,7 @@
   :delight)
 
 ;; To get the latest version of gopls:
-;; go get golang.org/x/tools/gopls@latest
+;; go install golang.org/x/tools/gopls@latest
 (use-package eglot
   :hook
   (go-mode . eglot-ensure)
@@ -433,10 +433,6 @@
     (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
     (add-hook 'before-save-hook #'+eglot-organize-imports))
   (add-hook 'go-mode-hook #'go-hooks))
-
-(use-package go-playground
-  :init
-  (setq go-playground-basedir "~/Projects/go/src/playground"))
 
 (use-package company
   :delight
