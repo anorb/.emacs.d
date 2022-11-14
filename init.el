@@ -276,7 +276,7 @@
    ("H-u" . counsel-org-goto-all))
   :custom (org-modules '(org-tempo org-habit org-checklist))
   :init
-  (setq org-directory "~/org/")
+  (setq org-directory "~/Documents/org/")
   (load-library "find-lisp")
   (setq org-agenda-files (find-lisp-find-files org-directory "\.org$"))
   (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
@@ -291,20 +291,26 @@
   (setq org-agenda-custom-commands
       '(("d" "Day agenda"
          ((agenda ""
-                  ((org-agenda-span 1)
-                   (org-agenda-sorting-strategy '(habit-up time-up scheduled-down category-keep)))))
+                  ((org-agenda-span 3)
+                   (org-agenda-sorting-strategy '(habit-up time-up scheduled-down category-keep))))
+          (todo "NEXT" ((org-agenda-overriding-header "\nIn progress:")))
+          (todo "WAITING" ((org-agenda-overriding-header "\nOn hold:"))))
          ((org-agenda-compact-blocks t)))
+        ("A" "All TODOs, sorted by tag"
+         ((todo "TODO" ((org-agenda-sorting-strategy '(tag-up))))))
         ("b" "View reading list"
-         ((todo "READINGLIST")
+         ((todo "STARTED" ((org-agenda-files '("~/Documents/org/books.org"))
+                           (org-agenda-overriding-header "\nBooks started:\n------------------\n")))
+          (todo "READINGLIST")
           (todo "STARTED")
           (todo "NEEDSREVIEW")
           (todo "READ"))
-         ((org-agenda-files '("~/org/books.org"))))
-        ("A" "all items set with todo" todo "TODO")))
+         ((org-agenda-files '("~/Documents/org/books.org"))))))
 
   (setq org-log-done t)
   (setq org-log-into-drawer t)
-  (setq org-todo-keywords '((type "TODO" "|" "DONE")))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n!)" "WAITING(w@/!)" "|" "DONE(d!)" "CANCELLED(c@)")))
   (setq org-hide-leading-stars t)
   (setq org-ellipsis "⤵")
   (setq org-startup-folded t)
@@ -350,16 +356,8 @@
     :init
     (setq org-capture-bookmark nil)
     (setq org-capture-templates
-          `(("p" "Personal templates")
-            ("pt" "tech task"     entry (file+headline ,(concat org-directory "personal.org") "Tech tasks")     "* TODO %?\n")
-            ("pn" "non-tech task" entry (file+headline ,(concat org-directory "personal.org") "Non-tech tasks") "* TODO %?\n")
-            ("pr" "research"      entry (file+headline ,(concat org-directory "personal.org") "Research notes") "* TODO %?\n")
-            ("ps" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
-
-            ("f" "finance task" entry (file+headline ,(concat org-directory "finance.org") "Tasks") "* TODO %?\n")
-            ("i" "fitness task" entry (file+headline ,(concat org-directory "fitness.org") "Tasks") "* TODO %?\n")
-            ("e" "emacs task"   entry (file+headline ,(concat org-directory "emacs.org")   "Tasks") "* TODO %?\n")
-
+          `(("t" "task"     entry (file+headline ,(concat org-directory "personal.org") "Tasks")     "* TODO %? %^g\n:PROPERTIES:\n:CREATED: %U\n:END:\n" :empty-lines-after 1)
+            ("s" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
             ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))))
 
 (use-package elfeed
