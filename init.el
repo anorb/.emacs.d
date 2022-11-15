@@ -357,6 +357,7 @@
     (setq org-capture-bookmark nil)
     (setq org-capture-templates
           `(("t" "task"     entry (file+headline ,(concat org-directory "personal.org") "Tasks")     "* TODO %? %^g\n:PROPERTIES:\n:CREATED: %U\n:END:\n" :empty-lines-after 1)
+            ("i" "inbox" entry (file ,(concat org-directory "inbox.org"))  "* %?\n")
             ("s" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
             ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))))
 
