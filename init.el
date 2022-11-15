@@ -744,7 +744,8 @@ _k_ close tab
         mu4e-view-show-images t
         mu4e-get-mail-command  "mbsync -a"
         mu4e-attachment-dir "~/Downloads"
-        mu4e-compose-signature-auto-include nil)
+        mu4e-compose-signature-auto-include nil
+        mu4e-compose-format-flowed t)
 
   ;; Mail directories
   (setq mu4e-refile-folder "/Archive"
