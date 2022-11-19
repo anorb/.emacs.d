@@ -595,6 +595,14 @@
     (setq-local global-hl-line-mode nil)
     (setq-local truncate-lines t)))
 
+(use-package denote
+  :bind
+  ("C-c n" . an/hydra-denote/body)
+  :init
+  (setq denote-directory (expand-file-name "~/Documents/notes/"))
+  (setq denote-known-keywords '("emacs"))
+  (setq denote-date-prompt-use-org-read-date t))
+
 (use-package hydra
   :defer t
   :bind (("C-c o" . an/hydra-org/body)
@@ -723,7 +731,14 @@ _k_ close tab
     ("n" hl-todo-next "next")
     ("p" hl-todo-previous "previous")
     ("o" hl-todo-occur "occur" :exit t)
-    ("i" hl-todo-insert "insert" :exit t)))
+    ("i" hl-todo-insert "insert" :exit t))
+
+  (defhydra an/hydra-denote ()
+    "denote"
+    ("n" denote "New note" :exit t)
+    ("d" denote-date "New note (by date)" :exit t)
+    ("l" denote-link "Link to note" :exit t)
+    ("q" nil "quit")))
 
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
