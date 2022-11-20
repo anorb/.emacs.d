@@ -458,6 +458,8 @@
   (setq ledger-reports
         '(("this year" "%(binary) -f %(ledger-file) bal --period \"this year\" ^Expenses ^Income --invert")
           ("last year" "%(binary) -f %(ledger-file) bal --period \"last year\" ^Expenses ^Income --invert")
+          ("this month" "%(binary) -f %(ledger-file) bal --period \"this month\" ^Expenses ^Income --invert")
+          ("last month" "%(binary) -f %(ledger-file) bal --period \"last month\" ^Expenses ^Income --invert")
           ("bal"       "%(binary) -E -f %(ledger-file) bal")
           ("reg"       "%(binary) -f %(ledger-file) reg")
           ("payee"     "%(binary) -f %(ledger-file) reg @%(payee)")
