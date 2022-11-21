@@ -555,6 +555,8 @@
 
 (use-package magit)
 
+(use-package yaml-mode)
+
 (use-package markdown-mode)
 
 (use-package browse-kill-ring
@@ -596,6 +598,8 @@
   (defun vterm-hook ()
     (setq-local global-hl-line-mode nil)
     (setq-local truncate-lines t)))
+
+(use-package rec-mode)
 
 (use-package denote
   :bind
