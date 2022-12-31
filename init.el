@@ -224,7 +224,14 @@
   :bind (:map flymake-mode-map
               ("H-k" . an/hydra-flymake/body))
   :init
-  (setq flymake-suppress-zero-counters t))
+  (setq flymake-suppress-zero-counters nil)
+  (setq flymake-mode-line-format
+      '("" flymake-mode-line-exception flymake-mode-line-counters))
+
+(setq flymake-mode-line-counter-format
+        '(" [" flymake-mode-line-error-counter
+          flymake-mode-line-warning-counter
+          flymake-mode-line-note-counter "]")))
 
 ;; Requires:
 ;; aspell
@@ -291,7 +298,7 @@
   (setq org-agenda-custom-commands
       '(("d" "Day agenda"
          ((agenda ""
-                  ((org-agenda-span 3)
+                  ((org-agenda-span 5)
                    (org-agenda-sorting-strategy '(habit-up time-up scheduled-down category-keep))))
           (todo "NEXT" ((org-agenda-overriding-header "\nIn progress:")))
           (todo "WAITING" ((org-agenda-overriding-header "\nOn hold:"))))
@@ -576,7 +583,6 @@
 
 (use-package ivy-pass)
 (use-package restclient)
-(use-package elpher)
 
 ;; Requires:
 ;; wordnet
