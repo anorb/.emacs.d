@@ -624,10 +624,10 @@
   :init
   (defhydra an/hydra-org (:hint nil)
     "
-^Clock^                    ^Capture^           ^Search
------------------------------------------------------
-_i_ clock in               _c_: capture        _g_: goto header in file
-_o_ clock out              _L_: last stored    _G_: goto header in all
+^Clock^                    ^Capture^           ^Search                   ^Misc
+-----------------------------------------------------------------------------------------
+_i_ clock in               _c_: capture        _g_: goto header in file  _s_ caldav sync
+_o_ clock out              _L_: last stored                              _n_ narrow
 _j_ goto current clock
 _l_ goto last clock
 _t_ toggle mode line total
@@ -644,12 +644,14 @@ _r_ clock report
     ("d" org-clock-display)
     ("r" org-clock-report :exit t)
     ;; Capture
-    ("c" counsel-org-capture)
+    ("c" org-capture)
     ("L" org-capture-goto-last-stored)
     ;; Search
-    ("g" counsel-org-goto)
-    ("G" counsel-org-goto-all)
+    ("g" consult-org-heading)
     ;; Misc
+    ("s" org-caldav-sync)
+    ("n" org-toggle-narrow-to-subtree :exit t)
+    ;; Jump to schedule??
     ("q" nil "cancel"))
 
   (defhydra an/hydra-elfeed ()
