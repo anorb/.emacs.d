@@ -268,19 +268,47 @@
   :init
   (setq ad-redefinition-action 'accept))
 
+(use-package savehist
+  :init
+  (savehist-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
 ;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package delight)
 
+(use-package consult
+  :bind (("H-i" . consult-imenu)
+         ("H-s" . consult-grep)
+         ("C-x b" . consult-buffer)
+         ("C-s" . consult-line))
+  :init
+  (setq consult-line-start-from-top t))
+
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+;; Enable vertico
+(use-package vertico
+  :init
+  (vertico-mode)
+  (setq completion-styles '(orderless basic)))
+
+(use-package orderless)
+
+(use-package corfu
+  :hook ((prog-mode . corfu-mode))
+  :init
+  (setq corfu-auto t))
+
 (use-package org
   :defer t
   :bind
-  (("C-c c" . counsel-org-capture)
+  (("C-c c" . org-capture)
    ("C-c a" . org-agenda)
    :map org-mode-map
-   ("H-i" . counsel-org-goto)
-   ("H-u" . counsel-org-goto-all))
+   ("H-i" . consult-org-heading)
   :custom (org-modules '(org-tempo org-habit org-checklist))
   :init
   (setq org-directory "~/Documents/org/")
@@ -440,19 +468,6 @@
     (add-hook 'before-save-hook #'+eglot-organize-imports))
   (add-hook 'go-mode-hook #'go-hooks))
 
-(use-package company
-  :delight
-  :bind (("C-c ." . company-complete)
-         ("C-c C-." . company-complete)
-         ("C-c C-s" . company-yasnippet))
-  :hook (prog-mode . company-mode)
-  :init
-  (setq completion-ignore-case t)
-  (setq company-tooltip-align-annotations t
-        company-minimum-prefix-length 1
-        company-selection-wrap-around t
-        company-idle-delay 1))
-
 (use-package ledger-mode ; requires ledger binary
   :mode "\\.ledger\\'"
   :hook (ledger-mode . ledger-flymake-enable)
@@ -477,8 +492,6 @@
   (setq inferior-lisp-program "/usr/bin/sbcl")
   (setq slime-contribs '(slime-fancy slime-company))
   (setq common-lisp-hyperspec-root (concat "file://" (expand-file-name "~/Projects/lisp/HyperSpec/"))))
-
-(use-package slime-company)
 
 (use-package yasnippet
   :delight yas-minor-mode
@@ -511,49 +524,6 @@
 (use-package expand-region
   :bind ("H-w" . er/expand-region))
 
-(use-package ivy
-  :delight
-  :init
-  (ivy-mode 1)
-  (setq ivy-count-format "%d/%d "
-        ivy-display-style 'fancy
-        ivy-initial-inputs-alist nil))
-
-(use-package swiper
-  :bind
-  ("C-s" . swiper-isearch))
-
-(use-package counsel
-  :bind
-  ("M-x" . counsel-M-x)
-  ("C-x C-f" . counsel-find-file)
-  ("H-i" . counsel-imenu)
-  ("H-s" . counsel-ag)
-  ("C-h o" . counsel-describe-symbol)
-  ("C-h v" . counsel-describe-variable)
-  ("C-h f" . counsel-describe-function)
-  :config
-  (ivy-set-actions
-   'counsel-find-file
-   '(("x" find-file-other-window "other window")
-     ("d" delete-file "delete")))
-  ;; Couldn't find a better way to set initial input for ivy so we'll try this
-  (add-to-list 'ivy-initial-inputs-alist '(counsel-M-x . "")))
-
-(use-package amx
-  :config
-  (amx-mode 1))
-
-(use-package ivy-rich
-  :config
-  (ivy-rich-mode 1)
-  (setq ivy-rich-path-style 'abbrev))
-
-(use-package flyspell-correct-ivy
-    :bind ("C-M-;" . flyspell-correct-wrapper)
-    :init
-    (setq flyspell-correct-interface #'flyspell-correct-ivy))
-
 (use-package multiple-cursors
   :bind
   ("C-S-c C-S-c" . mc/edit-lines)
@@ -581,7 +551,6 @@
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   (setq nov-text-width 80))
 
-(use-package ivy-pass)
 (use-package restclient)
 
 ;; Requires:
