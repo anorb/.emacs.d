@@ -17,11 +17,6 @@
 (if (file-exists-p custom-file)
     (load custom-file))
 
-;; Bootstrap use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
 ;; use-package settings
 (defvar use-package-always-ensure t)
 (defvar use-package-enable-imenu-support t)
@@ -204,7 +199,7 @@
 
 (use-package tab-bar
   :bind
-  ("H-t" . an/hydra-window-management/body)
+  ("s-t" . an/hydra-window-management/body)
   ;; monkey-with-hammer.png
   ("M-1" .  (lambda () (interactive) (tab-bar-select-tab 1)))
   ("M-2" .  (lambda () (interactive) (tab-bar-select-tab 2)))
@@ -222,7 +217,7 @@
 (use-package flymake
   :hook (prog-mode . flymake-mode)
   :bind (:map flymake-mode-map
-              ("H-k" . an/hydra-flymake/body))
+              ("s-k" . an/hydra-flymake/body))
   :init
   (setq flymake-suppress-zero-counters nil)
   (setq flymake-mode-line-format
@@ -255,7 +250,7 @@
   (setq epg-gpg-home-directory "~/.gnupg"))
 
 (use-package eshell
-  :bind (("H-e" . eshell)))
+  :bind (("s-e" . eshell)))
 
 (use-package desktop
   :init
@@ -272,14 +267,20 @@
   :init
   (savehist-mode))
 
+(use-package eglot
+  :hook
+  (go-mode . eglot-ensure)
+  (c-mode . eglot-ensure)
+  :bind (:map eglot-mode-map ("s-l" . 'an/hydra-eglot/body)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
 ;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package delight)
 
 (use-package consult
-  :bind (("H-i" . consult-imenu)
-         ("H-s" . consult-grep)
+  :bind (("s-i" . consult-imenu)
+         ("s-s" . consult-grep)
          ("C-x b" . consult-buffer)
          ("C-s" . consult-line))
   :init
@@ -308,8 +309,10 @@
   (("C-c c" . org-capture)
    ("C-c a" . org-agenda)
    :map org-mode-map
-   ("H-i" . consult-org-heading)
-  :custom (org-modules '(org-tempo org-habit org-checklist))
+   ("s-i" . consult-org-heading)
+   :map org-agenda-keymap
+   ("C-c C-t" . an/org-mark-done))
+  :custom (org-modules '(org-tempo org-habit org-checklist org-mouse))
   :init
   (setq org-directory "~/Documents/org/")
   (load-library "find-lisp")
@@ -454,12 +457,6 @@
 
 ;; To get the latest version of gopls:
 ;; go install golang.org/x/tools/gopls@latest
-(use-package eglot
-  :hook
-  (go-mode . eglot-ensure)
-  (c-mode . eglot-ensure)
-  :bind (:map eglot-mode-map ("H-l" . 'an/hydra-eglot/body)))
-
 (use-package go-mode
   :init
   (defun +eglot-organize-imports() (call-interactively 'eglot-code-action-organize-imports))
@@ -522,7 +519,7 @@
   :hook ((prog-mode . hl-todo-mode)))
 
 (use-package expand-region
-  :bind ("H-w" . er/expand-region))
+  :bind ("s-w" . er/expand-region))
 
 (use-package multiple-cursors
   :bind
@@ -735,7 +732,7 @@ _k_ close tab
 
 (use-package mu4e
   :ensure nil
-  :load-path "/usr/share/emacs/site-lisp/mu4e"
+  :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :init
   (setq mu4e-change-filenames-when-moving t
         mu4e-headers-skip-duplicates t
