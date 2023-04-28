@@ -275,6 +275,10 @@ show normally otherwise."
       (print (substring text (match-beginning 1) (match-end 1)))
       (an/open-in-mpv (substring text (match-beginning 1) (match-end 1))))))
 
+(defun an/org-mark-done ()
+  (interactive)
+  (org-agenda-todo "DONE"))
+
 (defun an/replace-angled-quotes ()
   "Replace all angled single & double quotes with straight variant in buffer."
   (interactive)

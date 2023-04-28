@@ -124,7 +124,8 @@
 (global-set-key (kbd "C-x M-d") 'dired-other-window)
 
 (unbind-key "C-x C-c") ;; prevent save-buffers-kill-terminal keybind
-(unbind-key "C-z") ;; prevent suspend
+(unbind-key "C-z")     ;; prevent suspend
+(unbind-key "C-x C-z") ;; prevent minimize
 
 ;;; Built in packages
 (use-package emacs
