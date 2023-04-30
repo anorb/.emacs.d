@@ -719,6 +719,8 @@ _k_ close tab
     ("n" denote "New note" :exit t)
     ("d" denote-date "New note (by date)" :exit t)
     ("l" denote-link "Link to note" :exit t)
+    ("r" denote-rename-file-using-front-matter "Rename" :exit t)
+    ("D" (dired denote-directory) "Denote dired" :exit t)
     ("q" nil "quit")))
 
 ;;; Local packages
