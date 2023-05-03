@@ -733,6 +733,10 @@ _k_ close tab
   :ensure nil
   :load-path "lisp/org-archive-subtree-hierarchical")
 
+(use-package ob-rec
+  :ensure nil
+  :load-path "lisp/ob-rec")
+
 (use-package mu4e
   :ensure nil
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
