@@ -400,6 +400,20 @@
             ("s" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
             ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))))
 
+(use-package org-caldav
+  :ensure t
+  :defer
+  :config
+  (setq org-caldav-url an/caldav-url)
+  (setq org-caldav-calendars
+        `((:calendar-id ,an/caldav-calendar-id
+                        :inbox "~/Documents/org/schedule.org")))
+  (setq org-caldav-files nil)
+  (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due)
+        org-icalendar-use-scheduled '(event-if-todo event-if-not-todo todo-start)
+        org-icalendar-include-todo t
+        org-icalendar-timezone "America/Chicago"))
+
 (use-package elfeed
   :bind (("C-x w" . elfeed)
   :map elfeed-search-mode-map
