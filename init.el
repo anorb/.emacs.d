@@ -337,6 +337,13 @@
          ((org-agenda-compact-blocks t)))
         ("A" "All TODOs, sorted by tag"
          ((todo "TODO" ((org-agenda-sorting-strategy '(tag-up))))))
+        ("I" . "Inbox queries")
+        ("Is" "Tag - shopping"
+         ((tags "shopping"))
+         ((org-agenda-files '("~/Documents/org/inbox.org"))))
+        ("Iz" "Tag - zettel"
+         ((tags "zettel"))
+         ((org-agenda-files '("~/Documents/org/inbox.org"))))
         ("b" "View reading list"
          ((todo "STARTED" ((org-agenda-files '("~/Documents/org/books.org"))
                            (org-agenda-overriding-header "\nBooks started:\n------------------\n")))
@@ -397,7 +404,7 @@
     (setq org-capture-templates
           `(("t" "task"     entry (file+headline ,(concat org-directory "personal.org") "Tasks")     "* TODO %? %^g\n:PROPERTIES:\n:CREATED: %U\n:END:\n" :empty-lines-after 1)
             ("i" "inbox" entry (file ,(concat org-directory "inbox.org"))  "* %?\n")
-            ("s" "shopping list" entry (file+headline ,(concat org-directory "personal.org") "Shopping list")  "* %?\n")
+            ("s" "shopping list" entry (file ,(concat org-directory "inbox.org")) "* %? :shopping:\n:PROPERTIES:\n:CREATED: %U\n:END:\n" :empty-lines-after 1)
             ("b" "add book to reading list" entry (file+headline ,(concat org-directory "books.org")   "Reading list") "* READINGLIST %^{Title}\n:PROPERTIES:\n:AUTHOR: %^{Author}\n:GENRE: %^{Genre}\n:PAGES: %^{Pages}\n:END:\n")))))
 
 (use-package org-caldav
