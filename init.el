@@ -274,6 +274,14 @@
   (c-mode . eglot-ensure)
   :bind (:map eglot-mode-map ("s-l" . 'an/hydra-eglot/body)))
 
+(use-package isearch
+  :ensure nil
+  :init
+  (setq isearch-lazy-count t)
+  (setq lazy-count-prefix-format "(%s/%s) ")
+  (setq isearch-repeat-on-direction-change t)
+  (setq isearch-wrap-pause 'no-ding))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -283,7 +291,7 @@
   :bind (("s-i" . consult-imenu)
          ("s-s" . consult-grep)
          ("C-x b" . consult-buffer)
-         ("C-s" . consult-line))
+         ("C-S-s" . consult-line))
   :init
   (setq consult-line-start-from-top t))
 
