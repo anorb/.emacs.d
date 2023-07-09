@@ -551,12 +551,6 @@
 (use-package expand-region
   :bind ("s-w" . er/expand-region))
 
-(use-package multiple-cursors
-  :bind
-  ("C-S-c C-S-c" . mc/edit-lines)
-  ("C->" . mc/mark-next-like-this)
-  ("C-<" . mc/mark-previous-like-this))
-
 (use-package magit)
 
 (use-package yaml-mode)
