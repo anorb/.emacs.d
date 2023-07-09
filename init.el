@@ -551,7 +551,13 @@
 (use-package expand-region
   :bind ("s-w" . er/expand-region))
 
-(use-package magit)
+(use-package magit
+  :bind
+  (:map magit-mode-map
+        ("M-1" . nil)
+        ("M-2" . nil)
+        ("M-3" . nil)
+        ("M-4" . nil)))
 
 (use-package yaml-mode)
 
