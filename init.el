@@ -557,7 +557,9 @@
         ("M-1" . nil)
         ("M-2" . nil)
         ("M-3" . nil)
-        ("M-4" . nil)))
+        ("M-4" . nil))
+  :init
+  (setq magit-save-repository-buffers 'dontask))
 
 (use-package yaml-mode)
 
