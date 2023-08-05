@@ -200,7 +200,7 @@
 
 (use-package tab-bar
   :bind
-  ("s-t" . an/hydra-window-management/body)
+  ("H-t" . an/hydra-window-management/body)
   ;; monkey-with-hammer.png
   ("M-1" .  (lambda () (interactive) (tab-bar-select-tab 1)))
   ("M-2" .  (lambda () (interactive) (tab-bar-select-tab 2)))
@@ -218,7 +218,7 @@
 (use-package flymake
   :hook (prog-mode . flymake-mode)
   :bind (:map flymake-mode-map
-              ("s-k" . an/hydra-flymake/body))
+              ("H-k" . an/hydra-flymake/body))
   :init
   (setq flymake-suppress-zero-counters nil)
   (setq flymake-mode-line-format
@@ -251,7 +251,7 @@
   (setq epg-gpg-home-directory "~/.gnupg"))
 
 (use-package eshell
-  :bind (("s-e" . eshell)))
+  :bind (("C-`" . eshell)))
 
 (use-package desktop
   :init
@@ -272,7 +272,7 @@
   :hook
   (go-mode . eglot-ensure)
   (c-mode . eglot-ensure)
-  :bind (:map eglot-mode-map ("s-l" . 'an/hydra-eglot/body)))
+  :bind (:map eglot-mode-map ("H-l" . 'an/hydra-eglot/body)))
 
 (use-package isearch
   :ensure nil
@@ -288,8 +288,8 @@
 (use-package delight)
 
 (use-package consult
-  :bind (("s-i" . consult-imenu)
-         ("s-s" . consult-grep)
+  :bind (("H-i" . consult-imenu)
+         ("H-s" . consult-grep)
          ("C-x b" . consult-buffer)
          ("C-S-s" . consult-line))
   :init
@@ -318,7 +318,7 @@
   (("C-c c" . org-capture)
    ("C-c a" . org-agenda)
    :map org-mode-map
-   ("s-i" . consult-org-heading)
+   ("H-i" . consult-org-heading)
    :map org-agenda-keymap
    ("C-c C-t" . an/org-mark-done))
   :custom (org-modules '(org-tempo org-habit org-checklist org-mouse))
@@ -549,7 +549,7 @@
   :hook ((prog-mode . hl-todo-mode)))
 
 (use-package expand-region
-  :bind ("s-w" . er/expand-region))
+  :bind ("H-w" . er/expand-region))
 
 (use-package magit
   :bind
