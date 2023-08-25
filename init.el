@@ -119,10 +119,6 @@
 
 (global-set-key (kbd "C-x j") 'an/change-desktop)
 
-(global-set-key (kbd "C-x d") 'dired)
-(global-set-key (kbd "C-x C-d") 'dired-jump)
-(global-set-key (kbd "C-x M-d") 'dired-other-window)
-
 (unbind-key "C-x C-c") ;; prevent save-buffers-kill-terminal keybind
 (unbind-key "C-z")     ;; prevent suspend
 (unbind-key "C-x C-z") ;; prevent minimize
@@ -170,6 +166,11 @@
 		 (name . "^\\*scratch\\*$")
 		 (name . "^\\*Messages\\*$")
                  (name . "^\\*Help\\*$")))))))
+
+(use-package dired
+  :bind (("C-x d" . dired)
+         ("C-x C-d" . dired-jump)
+         ("C-x M-d" . dired-other-window)))
 
 (use-package autorevert
   :delight auto-revert-mode
@@ -282,6 +283,10 @@
   (setq isearch-repeat-on-direction-change t)
   (setq isearch-wrap-pause 'no-ding))
 
+(use-package pixel-scroll
+  :ensure nil
+  :init
+  (pixel-scroll-precision-mode))
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -757,19 +762,19 @@ _k_ close tab
 ;;; Local packages
 ;; These are packages not available on MELPA and/or have been modified
 (use-package web-server
-  :ensure nil
+  :pin manual
   :load-path "lisp/web-server")
 
 (use-package org-archive-subtree-hierarchical
-  :ensure nil
+  :pin manual
   :load-path "lisp/org-archive-subtree-hierarchical")
 
 (use-package ob-rec
-  :ensure nil
+  :pin manual
   :load-path "lisp/ob-rec")
 
 (use-package mu4e
-  :ensure nil
+  :pin manual
   :load-path "/usr/local/share/emacs/site-lisp/mu4e"
   :init
   (setq mu4e-change-filenames-when-moving t
