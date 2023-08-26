@@ -277,6 +277,8 @@
 
 (use-package isearch
   :ensure nil
+  :bind (:map isearch-mode-map
+              ("C-SPC" . consult-line))
   :init
   (setq isearch-lazy-count t)
   (setq lazy-count-prefix-format "(%s/%s) ")
@@ -293,10 +295,9 @@
 (use-package delight)
 
 (use-package consult
-  :bind (("H-i" . consult-imenu)
+  :bind (("M-g i" . consult-imenu)
          ("H-s" . consult-grep)
-         ("C-x b" . consult-buffer)
-         ("C-S-s" . consult-line))
+         ("C-x b" . consult-buffer))
   :init
   (setq consult-line-start-from-top t))
 
@@ -578,7 +579,7 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package avy
-  :bind ("C-r" . avy-goto-char-timer))
+  :bind ("H-a" . avy-goto-char-timer))
 
 (use-package nov
   :init
