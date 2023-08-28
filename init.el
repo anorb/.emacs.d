@@ -69,7 +69,6 @@
 (defalias 'yes-or-no-p 'y-or-n-p) ; Make yes/no prompts shorter
 (show-paren-mode 1)               ; Highlight parenthesis & other characters
 (global-hl-line-mode 1)           ; Highlight current line
-(set-frame-font "DejaVu Sans Mono-10" t t)
 
 ;; Typing with region selected will delete region
 (delete-selection-mode)
@@ -289,6 +288,13 @@
   :ensure nil
   :init
   (pixel-scroll-precision-mode))
+
+(use-package dictionary)
+
+(use-package windmove
+  :init
+  (windmove-default-keybindings 'control))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -465,12 +471,6 @@
   (global-undo-tree-mode)
   (setq undo-tree-auto-save-history nil))
 
-(use-package ace-window
-  :bind (("M-o" . ace-window))
-  :config
-  (ace-window-display-mode 1)
-  (setq aw-background nil))
-
 (use-package diff-hl
   :delight
   :init
@@ -538,11 +538,7 @@
   :hook (prog-mode . smartparens-mode)
   :bind (:map smartparens-mode-map
               ("C-H-f" . sp-forward-sexp)
-	      ("C-H-b" . sp-backward-sexp)
-              ("C-<right>" . sp-forward-slurp-sexp)
-	      ("C-<left>" . sp-forward-barf-sexp)
-	      ("C-<up>" . sp-backward-slurp-sexp)
-	      ("C-<down>" . sp-backward-barf-sexp))
+	      ("C-H-b" . sp-backward-sexp))
   :init
   (setq sp-highlight-pair-overlay nil)
   :config
@@ -587,27 +583,6 @@
   (setq nov-text-width 80))
 
 (use-package restclient)
-
-;; Requires:
-;; wordnet
-(use-package synosaurus
-  :config
-  (setq synosaurus-backend 'synosaurus-backend-wordnet)
-  (setq synosaurus-choose-method 'default))
-
-;; Requires:
-;; wordnet
-(use-package wordnut)
-
-(use-package vterm
-  :bind ("C-`" . vterm)
-  :hook
-  (vterm-mode . vterm-hook)
-  :init
-  (setq vterm-kill-buffer-on-exit t)
-  (defun vterm-hook ()
-    (setq-local global-hl-line-mode nil)
-    (setq-local truncate-lines t)))
 
 (use-package rec-mode)
 
