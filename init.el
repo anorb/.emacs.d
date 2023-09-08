@@ -295,6 +295,48 @@
   :init
   (windmove-default-keybindings 'control))
 
+(use-package dbus
+  :init
+  (defun theme-switcher (value)
+     (pcase value
+          ;; No Preference
+       (0 ;;(shell-command "gsettings set org.gnome.desktop.interface gtk-theme \"adw-gtk3\"")
+          (load-theme 'modus-operandi t))
+           ;; Prefers dark
+       (1 ;;(shell-command "gsettings set org.gnome.desktop.interface gtk-theme \"adw-gtk3-dark\"")
+          (load-theme 'modus-vivendi t))
+           ;; Prefers light. Not currently used by Gnome
+       (2 ;;(shell-command "gsettings set org.gnome.desktop.interface gtk-theme \"adw-gtk3\"")
+         (load-theme 'modus-operandi t))
+           (_ (message "Invalid key value"))))
+
+  (defun handler (value)
+    (theme-switcher (car (car value))))
+
+  (defun signal-handler (namespace key value)
+    (if (and
+         (string-equal namespace "org.freedesktop.appearance")
+         (string-equal key "color-scheme"))
+        (theme-switcher (car value))))
+  :config
+  (dbus-call-method-asynchronously
+   :session
+   "org.freedesktop.portal.Desktop"
+   "/org/freedesktop/portal/desktop"
+   "org.freedesktop.portal.Settings"
+   "Read"
+   #'handler
+   "org.freedesktop.appearance"
+   "color-scheme")
+
+  (dbus-register-signal
+   :session
+   "org.freedesktop.portal.Desktop"
+   "/org/freedesktop/portal/desktop"
+   "org.freedesktop.portal.Settings"
+   "SettingChanged"
+   #'signal-handler))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; MELPA packages
 ;;;;;;;;;;;;;;;;;;;;;;;;
