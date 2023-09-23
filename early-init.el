@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2020  Austin Norberg
 
-;; Author: Austin Norberg <austin@norberg.tech>
+;; Author: Austin Norberg <austin@norb.xyz>
 
 ;;; Commentary:
 

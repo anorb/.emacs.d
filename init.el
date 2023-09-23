@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2018  Austin Norberg
 
-;; Author: Austin Norberg <austin@norberg.tech>
+;; Author: Austin Norberg <austin@norb.xyz>
 
 ;;; Commentary:
 
@@ -383,7 +383,8 @@
   (run-at-time "1 hour" 3600 'org-save-all-org-buffers) ; Save org-buffers every hour
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((shell . t)))
+   '((shell . t)
+     (sqlite . t)))
 
   (add-hook 'org-mode-hook #'(lambda ()
 			       (visual-line-mode)
@@ -626,8 +627,6 @@
 
 (use-package restclient)
 
-(use-package rec-mode)
-
 (use-package denote
   :bind
   ("C-c n" . an/hydra-denote/body)
@@ -778,18 +777,9 @@ _k_ close tab
     ("q" nil "quit")))
 
 ;;; Local packages
-;; These are packages not available on MELPA and/or have been modified
-(use-package web-server
-  :pin manual
-  :load-path "lisp/web-server")
-
 (use-package org-archive-subtree-hierarchical
   :pin manual
   :load-path "lisp/org-archive-subtree-hierarchical")
-
-(use-package ob-rec
-  :pin manual
-  :load-path "lisp/ob-rec")
 
 (use-package mu4e
   :pin manual
