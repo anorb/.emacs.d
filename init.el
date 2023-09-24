@@ -135,6 +135,11 @@
   (setq auto-save-default t)
   (setq create-lockfiles nil)
 
+  (setq tab-always-indent 'complete)
+  (setq completion-ignore-case t)
+  (when (display-graphic-p)
+    (context-menu-mode))
+
   (load-theme 'modus-operandi)
   (define-key global-map (kbd "<f6>") #'modus-themes-toggle))
 
@@ -364,7 +369,9 @@
 (use-package corfu
   :hook ((prog-mode . corfu-mode))
   :init
-  (setq corfu-auto t))
+  (setq corfu-min-width 80)
+  (setq corfu-max-width corfu-min-width)
+  (setq corfu-count 20))
 
 (use-package org
   :defer t
@@ -633,7 +640,8 @@
   :init
   (setq denote-directory (expand-file-name "~/Documents/notes/"))
   (setq denote-known-keywords '("emacs"))
-  (setq denote-date-prompt-use-org-read-date t))
+  (setq denote-date-prompt-use-org-read-date t)
+  (require 'denote-org-dblock))
 
 (use-package hydra
   :defer t
@@ -774,6 +782,7 @@ _k_ close tab
     ("l" denote-link "Link to note" :exit t)
     ("r" denote-rename-file-using-front-matter "Rename" :exit t)
     ("D" (dired denote-directory) "Denote dired" :exit t)
+    ("B" denote-backlinks "Open backlinks buffer" :exit t)
     ("q" nil "quit")))
 
 ;;; Local packages
